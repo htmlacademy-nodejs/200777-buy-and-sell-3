@@ -3,7 +3,7 @@
 const packageJsonFile = require(`../../../package.json`);
 
 module.exports = {
-  name: `--help`,
+  name: `--version`,
   run() {
     const version = packageJsonFile.version;
     console.log(version);

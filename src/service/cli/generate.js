@@ -65,7 +65,7 @@ const PictureRestrict = {
   max: 16,
 };
 
-const getRandomPictureFileName = (number) => number > 10 ? `item${number}.jpg` : `item0${number}.jpg` 
+const getRandomPictureFileName = (number) => number > 10 ? `item${number}.jpg` : `item0${number}.jpg`;
 
 const generateOffers = (count) => (
   Array(count).fill({}).map(() => ({
@@ -74,14 +74,32 @@ const generateOffers = (count) => (
     description: shuffle(SENTENCES).slice(1, 5).join(` `),
     type: Object.keys(OfferType)[getRandomInt(0, Object.keys(OfferType).length - 1)],
     sum: getRandomInt(SumRestrict.min, SumRestrict.max),
-    category: Array(getRandomInt(1, CATEGORIES.length - 1)).fill(``).map(() => CATEGORIES[getRandomInt(0, CATEGORIES.length - 1)]),
+    category: Array(getRandomInt(1, CATEGORIES.length - 1))
+      .fill(``)
+      .map(() => CATEGORIES[getRandomInt(0, CATEGORIES.length - 1)]),
   }))
 );
+
 
 module.exports = {
   name: `--generate`,
   run(args) {
     const [count] = args;
-    //const content = 
-  },
+    const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
+
+    if (countOffer > MAX_COUNT) {
+      console.log(`Не больше ${MAX_COUNT} объявлений`);
+      return;
+    }
+
+    const content = JSON.stringify(generateOffers(countOffer));
+
+    fs.writeFile(FILE_NAME, content, (err) => {
+      if (err) {
+        return console.log(`Can't write data to file...`);
+      }
+
+      return console.log(`Operation success. File created.`);
+    });
+  }
 };

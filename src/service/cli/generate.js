@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require(`fs`);
+const chalk = require(`chalk`);
 
 const {
   getRandomInt,
@@ -88,7 +89,7 @@ module.exports = {
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
 
     if (countOffer > MAX_COUNT) {
-      console.log(`Не больше ${MAX_COUNT} объявлений`);
+      console.log(chalk.red(`Не больше ${MAX_COUNT} объявлений`));
       return;
     }
 
@@ -96,10 +97,10 @@ module.exports = {
 
     fs.writeFile(FILE_NAME, content, (err) => {
       if (err) {
-        return console.log(`Can't write data to file...`);
+        return console.log(chalk.red(`Can't write data to file...`));
       }
 
-      return console.log(`Operation success. File created.`);
+      return console.log(chalk.green(`Operation success. File created.`));
     });
   }
 };

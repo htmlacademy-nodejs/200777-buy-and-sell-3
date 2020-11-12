@@ -34,7 +34,11 @@ const PictureRestrict = {
 const readContent = async (filePath) => {
   try {
     const content = await fs.readFile(filePath, `utf8`);
-    return content.split(`\n`);
+    return content
+      .trim()
+      .split(`\n`)
+      .map((str) => str.trim())
+      .filter((str) => str.length);
   } catch (err) {
     console.error(chalk.red(err));
     return [];
@@ -43,7 +47,7 @@ const readContent = async (filePath) => {
 
 const getRandomPictureFileName = (number) => number > 10 ? `item${number}.jpg` : `item0${number}.jpg`;
 
-const generateOffers = (count, sentences, titles, categories) => (
+const generateOffers = (count, {sentences, titles, categories}) => (
   Array(count).fill({}).map(() => ({
     title: titles[getRandomInt(0, titles.length - 1)],
     picture: getRandomPictureFileName(getRandomInt(PictureRestrict.min, PictureRestrict.max)),
@@ -63,16 +67,19 @@ module.exports = {
     const [count] = args;
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
 
-    const sentences = await readContent(FILE_SENTENCES_PATH);
-    const titles = await readContent(FILE_TITLES_PATH);
-    const categories = await readContent(FILE_CATEGORIES_PATH);
+    const mockData = {
+      sentences: await readContent(FILE_SENTENCES_PATH),
+      titles: await readContent(FILE_TITLES_PATH),
+      categories: await readContent(FILE_CATEGORIES_PATH),
+    };
+
 
     if (countOffer > MAX_COUNT) {
       console.log(chalk.red(`Не больше ${MAX_COUNT} объявлений`));
       return;
     }
 
-    const content = JSON.stringify(generateOffers(countOffer, sentences, titles, categories));
+    const content = JSON.stringify(generateOffers(countOffer, mockData));
 
     try {
       await fs.writeFile(FILE_NAME, content);

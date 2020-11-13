@@ -10,7 +10,7 @@ const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 const {
   getRandomInt,
   shuffle
-} = require(`../../utils.js`);
+} = require(`../../utils`);
 
 const DEFAULT_COUNT = 1;
 const MAX_COUNT = 1000;

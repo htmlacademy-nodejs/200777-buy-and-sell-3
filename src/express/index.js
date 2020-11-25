@@ -19,8 +19,8 @@ app.use(`/offers`, offersRoutes);
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
 
-app.use((req, res) => res.status(400).render(`errors/404`));
-app.use((err, req, res) => res.status(500).render(`errors/500`));
+app.use((req, res) => res.status(404).render(`errors/404`));
+app.use((req, res) => res.status(500).render(`errors/500`));
 
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);

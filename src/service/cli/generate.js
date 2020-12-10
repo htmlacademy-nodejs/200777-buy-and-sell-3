@@ -2,10 +2,12 @@
 
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
+const {nanoid} = require(`nanoid`);
 
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
+const FILE_COMMENTS_PATH = `./data/comments.txt`;
 
 const {
   getRandomInt,
@@ -15,6 +17,8 @@ const {
 const DEFAULT_COUNT = 1;
 const MAX_COUNT = 1000;
 const FILE_NAME = `mocks.json`;
+const MAX_COMMENTS = 4;
+const {MAX_ID_LENGTH} = require(`../../constants`);
 
 const OfferType = {
   offer: `offer`,
@@ -47,8 +51,20 @@ const readContent = async (filePath) => {
 
 const getRandomPictureFileName = (number) => number > 10 ? `item${number}.jpg` : `item0${number}.jpg`;
 
-const generateOffers = (count, {sentences, titles, categories}) => (
+const getRandomId = (idLength) => nanoid(idLength);
+
+const generateComments = (count, comments) => (
   Array(count).fill({}).map(() => ({
+    id: getRandomId(MAX_ID_LENGTH),
+    text: shuffle(comments)
+      .slice(0, getRandomInt(1, 3))
+      .join(` `),
+  }))
+);
+
+const generateOffers = (count, {sentences, titles, categories, comments}) => (
+  Array(count).fill({}).map(() => ({
+    id: getRandomId(MAX_ID_LENGTH),
     title: titles[getRandomInt(0, titles.length - 1)],
     picture: getRandomPictureFileName(getRandomInt(PictureRestrict.min, PictureRestrict.max)),
     description: shuffle(sentences).slice(1, 5).join(` `),
@@ -57,6 +73,7 @@ const generateOffers = (count, {sentences, titles, categories}) => (
     category: Array(getRandomInt(1, categories.length - 1))
       .fill(``)
       .map(() => categories[getRandomInt(0, categories.length - 1)]),
+    comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments),
   }))
 );
 
@@ -71,6 +88,7 @@ module.exports = {
       sentences: await readContent(FILE_SENTENCES_PATH),
       titles: await readContent(FILE_TITLES_PATH),
       categories: await readContent(FILE_CATEGORIES_PATH),
+      comments: await readContent(FILE_COMMENTS_PATH),
     };
 
 

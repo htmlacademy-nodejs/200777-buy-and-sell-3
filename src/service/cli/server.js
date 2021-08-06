@@ -2,19 +2,19 @@
 
 const chalk = require(`chalk`);
 const express = require(`express`);
-const offersRoutes = require(`./routes/offers`);
-const {HttpCode} = require(`../../constants`);
+const {HttpCode, API_PREFIX} = require(`../../constants`);
+const routes = require(`../api`);
 
 const DEFAULT_PORT = 3000;
 const app = express();
 
 app.use(express.json());
 
-app.use(`/offers`, offersRoutes);
+app.use(API_PREFIX, routes);
 
 app.use((req, res) => res
   .status(HttpCode.NOT_FOUND)
-  .send(`Not found`)
+  .send(`Такой запрос не обрабатывается`)
 );
 
 module.exports = {

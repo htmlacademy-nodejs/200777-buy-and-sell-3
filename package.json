@@ -4,11 +4,13 @@
   "description": "Куплю.Продам",
   "main": "./src/service/service.js",
   "scripts": {
-    "test": "npm run eslint",
+    "test": "npm run eslint && npm run jest",
+    "jest": "jest",
     "eslint": "eslint --ext .js src/",
-    "start": "node ./src/service/service.js",
-    "start-front-server": "nodemon ./src/express/index.js",
-    "server": "nodemon ./src/service/service.js --server"
+    "server": "nodemon ./src/service/service.js --server",
+    "start": "cross-env LOG-LEVEL=error NODE_ENV=production node ./src/service/service.js",
+    "start::debug": "cross-env LOG-LEVEL=info NODE_ENV=development node ./src/service/service.js",
+    "start-front-server": "nodemon ./src/express/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,12 +25,17 @@
   "devDependencies": {
     "eslint": "6.8.0",
     "eslint-config-htmlacademy": "0.5.2",
-    "nodemon": "2.0.6"
+    "jest": "27.0.6",
+    "nodemon": "2.0.6",
+    "pino-pretty": "5.1.2",
+    "supertest": "6.1.4"
   },
   "dependencies": {
     "chalk": "4.1.0",
+    "cross-env": "7.0.3",
     "express": "4.17.1",
     "nanoid": "3.1.20",
+    "pino": "6.13.0",
     "pug": "3.0.0"
   }
 }

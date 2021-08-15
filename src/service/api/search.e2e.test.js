@@ -97,7 +97,7 @@ describe(`API returns offer based on search query`, () => {
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
 
-  test(`1 offer found`, () => expect(response.comments.body.length).toBe(1));
+  test(`1 offer found`, () => expect(response.body.length).toBe(1));
 
   test(`Offer has correct id`, () => expect(response.body[0].id).toBe(`Fg0ikD`));
 });
@@ -106,7 +106,7 @@ test(`API returns code 404 if nothing is found`,
     () => request(app)
       .get(`/search`)
       .query({
-        quert: `Продам какую-нибудь ерунду`
+        query: `Продам какую-нибудь ерунду`
       })
       .expect(HttpCode.NOT_FOUND)
 );

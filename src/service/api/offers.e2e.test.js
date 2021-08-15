@@ -4,8 +4,8 @@ const express = require(`express`);
 const request = require(`supertest`);
 
 const offers = require(`./offers`);
-const DataService = require(`../data-service/offer`);
-const CommentService = require(`../data-service/comment`);
+const DataService = require(`../data-service/offers`);
+const CommentsService = require(`../data-service/comments`);
 
 const {HttpCode} = require(`../../constants`);
 
@@ -131,9 +131,9 @@ const mockData = [
 
 const createAPI = () => {
   const app = express();
-  const clonedData = JSON.parse(JSON.stringify(mockData));
+  const cloneData = JSON.parse(JSON.stringify(mockData));
   app.use(express.json());
-  offers(app, new DataService(clonedData), new CommentService());
+  offers(app, new DataService(cloneData), new CommentsService());
   return app;
 };
 
@@ -152,7 +152,7 @@ describe(`API returns a list of all offers`, () => {
 
   test(`Returns a list of 5 offers`, () => expect(response.body.length).toBe(5));
 
-  test(`Second offer's id equals "ptkZyI`, () => expect(response.body[1].id).toBe(`ptkZyI`));
+  test(`First offer's id equals "bUAlOA"`, () => expect(response.body[0].id).toBe(`bUAlOA`));
 
 });
 
@@ -164,14 +164,12 @@ describe(`API returns an offer with given id`, () => {
 
   beforeAll(async () => {
     response = await request(app)
-      .get(`/offers/lP5Raq`);
+      .get(`/offers/bUAlOA`);
   });
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
 
-  test(`Offer's title is "Продам отличную подборку фильмов на VHS"`,
-      () => expect(response.body.title)
-      .toBe(`Продам отличную подборку фильмов на VHS`));
+  test(`Offer's title is "Куплю антиквариат"`, () => expect(response.body.title).toBe(`Куплю антиквариат`));
 
 });
 
@@ -185,9 +183,7 @@ describe(`API creates an offer if data is valid`, () => {
     type: `OFFER`,
     sum: 100500
   };
-
   const app = createAPI();
-
   let response;
 
   beforeAll(async () => {
@@ -196,11 +192,11 @@ describe(`API creates an offer if data is valid`, () => {
       .send(newOffer);
   });
 
-  test(`Stastus code 201`, () => expect(response.statusCode).toBe(HttpCode.CREATED));
 
-  test(`Returns offer create`,
-      () => expect(response.body)
-      .toEqual(expect.objectContaining(newOffer)));
+  test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.CREATED));
+
+
+  test(`Returns offer created`, () => expect(response.body).toEqual(expect.objectContaining(newOffer)));
 
   test(`Offers count is changed`, () => request(app)
     .get(`/offers`)
@@ -219,7 +215,6 @@ describe(`API refuses to create an offer if data is invalid`, () => {
     type: `OFFER`,
     sum: 100500
   };
-
   const app = createAPI();
 
   test(`Without any required property response code is 400`, async () => {
@@ -235,7 +230,6 @@ describe(`API refuses to create an offer if data is invalid`, () => {
 
 });
 
-
 describe(`API changes existent offer`, () => {
 
   const newOffer = {
@@ -246,9 +240,7 @@ describe(`API changes existent offer`, () => {
     type: `OFFER`,
     sum: 100500
   };
-
   const app = createAPI();
-
   let response;
 
   beforeAll(async () => {
@@ -259,10 +251,7 @@ describe(`API changes existent offer`, () => {
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
 
-  test(`Returns changed offer`,
-      () => expect(response.body)
-      .toEqual(expect.objectContaining(newOffer))
-  );
+  test(`Returns changed offer`, () => expect(response.body).toEqual(expect.objectContaining(newOffer)));
 
   test(`Offer is really changed`, () => request(app)
     .get(`/offers/bUAlOA`)
@@ -292,7 +281,7 @@ test(`API returns status code 404 when trying to change non-existent offer`, () 
 
 test(`API returns status code 400 when trying to change an offer with invalid data`, () => {
 
-  const app = cerateAPI();
+  const app = createAPI();
 
   const invalidOffer = {
     category: `Это`,
@@ -306,7 +295,6 @@ test(`API returns status code 400 when trying to change an offer with invalid da
     .put(`/offers/NOEXST`)
     .send(invalidOffer)
     .expect(HttpCode.BAD_REQUEST);
-
 });
 
 describe(`API correctly deletes an offer`, () => {
@@ -322,7 +310,7 @@ describe(`API correctly deletes an offer`, () => {
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
 
-  test(`Returns deleted odder`, () => expect(response.body.id).toEqual(`ptkZyI`));
+  test(`Returns deleted offer`, () => expect(response.body.id).toBe(`ptkZyI`));
 
   test(`Offer count is 4 now`, () => request(app)
     .get(`/offers`)
@@ -360,14 +348,13 @@ describe(`API returns a list of comments to given offer`, () => {
 
 });
 
+
 describe(`API creates a comment if data is valid`, () => {
 
   const newComment = {
-    text: `Валидный комментарий`
+    text: `Валидному комментарию достаточно этого поля`
   };
-
   const app = createAPI();
-
   let response;
 
   beforeAll(async () => {
@@ -376,7 +363,9 @@ describe(`API creates a comment if data is valid`, () => {
       .send(newComment);
   });
 
-  test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.OK));
+
+  test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.CREATED));
+
 
   test(`Returns comment created`, () => expect(response.body).toEqual(expect.objectContaining(newComment)));
 
@@ -384,6 +373,7 @@ describe(`API creates a comment if data is valid`, () => {
     .get(`/offers/GxdTgz/comments`)
     .expect((res) => expect(res.body.length).toBe(5))
   );
+
 });
 
 test(`API refuses to create a comment to non-existent offer and returns status code 404`, () => {
@@ -393,7 +383,7 @@ test(`API refuses to create a comment to non-existent offer and returns status c
   return request(app)
     .post(`/offers/NOEXST/comments`)
     .send({
-      text: `Новый комментарий`
+      text: `Неважно`
     })
     .expect(HttpCode.NOT_FOUND);
 
@@ -442,7 +432,7 @@ test(`API refuses to delete non-existent comment`, () => {
 
 });
 
-test(`API refuses to delete a comment to non-existing offer`, () => {
+test(`API refuses to delete a comment to non-existent offer`, () => {
 
   const app = createAPI();
 
@@ -451,5 +441,3 @@ test(`API refuses to delete a comment to non-existing offer`, () => {
     .expect(HttpCode.NOT_FOUND);
 
 });
-
-

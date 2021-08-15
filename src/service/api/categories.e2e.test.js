@@ -143,7 +143,7 @@ describe(`API returns category list`, () => {
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
 
-  test(`Returns list of 3 categories`, () => expect(response.body.lengt).toBe(3));
+  test(`Returns list of 3 categories`, () => expect(response.body.length).toBe(3));
 
   test(`Category names are "Журналы", "Игры", "Животные"`,
       () => expect(response.body).toEqual(

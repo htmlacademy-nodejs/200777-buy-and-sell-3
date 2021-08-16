@@ -28,7 +28,7 @@
     "jest": "27.0.6",
     "nodemon": "2.0.6",
     "pino-pretty": "5.1.2",
-    "supertest": "6.1.4"
+    "supertest": "6.1.5"
   },
   "dependencies": {
     "chalk": "4.1.0",

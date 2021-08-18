@@ -4,12 +4,12 @@ GET http://localhost:3000/api/offers HTTP/1.1
 ###
 
 // Вернёт объявление по id
-GET http://localhost:3000/api/offers/xT5OHE HTTP/1.1
+GET http://localhost:3000/api/offers/6X7R8x HTTP/1.1
 
 ###
 
 // Вернёт комментарии определённого объявления
-GET http://localhost:3000/api/offers/xT5OHE/comments HTTP/1.1
+GET http://localhost:3000/api/offers/6X7R8x/comments HTTP/1.1
 
 ###
 
@@ -64,9 +64,9 @@ Content-Type: application/json
 ###
 
 // Удалит определённое объявление
-DELETE http://localhost:3000/api/offers/sv6oiD HTTP/1.1
+DELETE http://localhost:3000/api/offers/6X7R8x HTTP/1.1
 
 ###
 
 // Удалит комментарий по id у объявления
-DELETE http://localhost:3000/api/offers/sv6oiD/comments/rl9ED2 HTTP/1.1
+DELETE http://localhost:3000/api/offers/GxdTgz/comments/RrXhBy HTTP/1.1

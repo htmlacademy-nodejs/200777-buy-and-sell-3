@@ -17,3 +17,7 @@ module.exports.HttpCode = {
 };
 module.exports.MAX_ID_LENGTH = 6;
 module.exports.API_PREFIX = `/api`;
+module.exports.ENV = {
+  DEVELOPMENT: `development`,
+  PRODUCTION: `production`
+};

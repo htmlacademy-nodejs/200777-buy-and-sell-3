@@ -3,9 +3,10 @@
 const {Router} = require(`express`);
 const {HttpCode} = require(`../../constants`);
 
-const route = new Router();
 
 module.exports = (app, service) => {
+  const route = new Router();
+
   app.use(`/search`, route);
 
   route.get(`/`, (req, res) => {
@@ -15,16 +16,18 @@ module.exports = (app, service) => {
 
     // Если запрос пуст, то вернём код Bad request и пустой массив в json
     if (!query) {
-      return res.status(HttpCode.BAD_REQUEST).json([]);
+      res.status(HttpCode.BAD_REQUEST).json([]);
+      return;
     }
 
     // Иначе достанем из сервиса результат на запрос
     const searchResults = service.findAll(query);
+    console.log(`From api server: ${searchResults}`);
 
     // В зависимости от наличия результата запроса определим код ответа
     const searchStatus = searchResults.length > 0 ? HttpCode.OK : HttpCode.NOT_FOUND;
 
     // Вернём определённый код ответа и json с результатом запроса
-    return res.status(searchStatus).json(searchResults);
+    res.status(searchStatus).json(searchResults);
   });
 };

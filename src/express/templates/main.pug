@@ -9,13 +9,15 @@ block content
         .tickets-list__header
           p.tickets-list__title Самое свежее
         ul
-          each offer in items
+          // Рендерим разметку на
+          // основе полученных данных
+          each offer in allOffers
             li.tickets-list__item
               .ticket-card.ticket-card--color01
                 .ticket-card__img
                   img(src=`/img/${offer.picture}` alt=offer.title)
                 .ticket-card__info
-                  span.ticket-card__label #{offer.type === `OFFER` ? `Куплю` : `Продам`}
+                  +ticketLabel(offer.type)
                   .ticket-card__categories
                     a(href="#") #{offer.category}
                   .ticket-card__header

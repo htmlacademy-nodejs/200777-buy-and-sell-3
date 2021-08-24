@@ -45,6 +45,7 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
     await api.createOffer(newOfferData);
     res.redirect(`/my`);
   } catch (error) {
+    console.log(error.message);
     res.redirect(`back`);
   }
 });

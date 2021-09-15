@@ -22,7 +22,6 @@ module.exports = (app, service) => {
 
     // Иначе достанем из сервиса результат на запрос
     const searchResults = service.findAll(query);
-    console.log(`From api server: ${searchResults}`);
 
     // В зависимости от наличия результата запроса определим код ответа
     const searchStatus = searchResults.length > 0 ? HttpCode.OK : HttpCode.NOT_FOUND;

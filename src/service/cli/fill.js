@@ -111,7 +111,7 @@ module.exports = {
 
     const offerCategories = offers.map((offer, index) => ({offerId: index + 1, categoryId: offer.category[0]}));
 
-    const userValues = offers.map(
+    const userValues = users.map(
         ({email, passwordHash, firstName, lastName, avatar}) => `('${email}', '${passwordHash}', '${firstName}', '${lastName}', '${avatar}')`
     ).join(`,\n`);
 

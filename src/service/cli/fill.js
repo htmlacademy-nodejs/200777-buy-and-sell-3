@@ -152,7 +152,7 @@ module.exports = {
     
     -- Запрос на создание комментариев к объявлениям offers
     ALTER TABLE comments DISABLE TRIGGER ALL;
-    INSERT INTO COMMENTS(text, user_id, offer_id) VALUES
+    INSERT INTO comments(text, user_id, offer_id) VALUES
     ${commentValues};
     ALTER TABLE comments ENABLE TRIGGER ALL;`;
 

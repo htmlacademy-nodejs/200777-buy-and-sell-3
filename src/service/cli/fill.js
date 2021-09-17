@@ -141,19 +141,19 @@ module.exports = {
     -- Запрос на заполнение offers объявлениями
     ALTER TABLE offers DISABLE TRIGGER ALL;
     INSERT INTO offers(title, description, type, sum, picture, user_id) VALUES
-    ${offerValues}
+    ${offerValues};
     ALTER TABLE offers ENABLE TRIGGER ALL;
     
     -- Запрос на создание связей между каждым объявлением из offers с категориями
     ALTER TABLE offer_categories DISABLE TRIGGER ALL;
     INSERT INTO offer_categories(offer_id, category_id) VALUES
-    ${offerCategoryValues}
+    ${offerCategoryValues};
     ALTER TABLE offer_categories ENABLE TRIGGER ALL;
     
     -- Запрос на создание комментариев к объявлениям offers
     ALTER TABLE comments DISABLE TRIGGER ALL;
     INSERT INTO COMMENTS(text, user_id, offer_id) VALUES
-    ${commentValues}
+    ${commentValues};
     ALTER TABLE comments ENABLE TRIGGER ALL;`;
 
     try {

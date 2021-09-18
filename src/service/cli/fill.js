@@ -118,15 +118,15 @@ module.exports = {
     const categoryValues = categories.map((name) => `('${name}')`).join(`,\n`);
 
     const offerValues = offers.map(
-        ({title, description, type, sum, picture, userId}) => `('${title}', '${description}', '${type}', '${sum}', '${picture}', '${userId}')`
+        ({title, description, type, sum, picture, userId}) => `('${title}', '${description}', '${type}', ${sum}, '${picture}', ${userId})`
     ).join(`,\n`);
 
     const offerCategoryValues = offerCategories.map(
-        ({offerId, categoryId}) => `('${offerId}', '${categoryId}')`
+        ({offerId, categoryId}) => `(${offerId}, ${categoryId})`
     ).join(`,\n`);
 
     const commentValues = comments.map(
-        ({text, userId, offerId}) => `('${text}', '${userId}', '${offerId}')`
+        ({text, userId, offerId}) => `('${text}', ${userId}, ${offerId})`
     ).join(`,\n`);
 
     const content = `

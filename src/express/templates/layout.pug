@@ -10,6 +10,9 @@ html(lang='ru')
   body
     mixin ticketLabel(type)
       span(class!=attributes.class || `ticket-card__label`) #{type === `OFFER` ? `Куплю` : `Продам`}
+
+    mixin insertOfferImage(offer)
+      img(src=`img/${offer.picture ? offer.picture : 'blank.png'}` alt=offer.title)
     
     include partials/header.pug
     block content

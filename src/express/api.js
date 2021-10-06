@@ -31,11 +31,11 @@ class API {
     return response.data;
   }
 
-  // Передаём в приватный метод ULR `/offers/`
+  // Передаём в приватный метод URL `/offers/`
   // По GET - запросу API - сервер вернёт список объявлений
   // Аналогичная работа и в других методах
-  getOffers() {
-    return this._load(`/offers`);
+  getOffers({comments}) {
+    return this._load(`/offers`, {params: {comments}});
   }
 
   getOffer(id) {

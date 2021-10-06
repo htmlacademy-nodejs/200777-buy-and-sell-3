@@ -12,7 +12,7 @@ myRouter.get(`/`, async (req, res) => {
 });
 
 myRouter.get(`/comments`, async (req, res) => {
-  const allOffers = await api.getOffers();
+  const allOffers = await api.getOffers({comments: true});
 
   res.render(`comments`, {allOffers: allOffers.slice(0, 3)});
 });

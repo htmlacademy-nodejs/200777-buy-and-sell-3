@@ -26,10 +26,11 @@ module.exports = (app, offerService, commentService) => {
 
 
   // Получить объявление по id
-  route.get(`/:offerId`, (req, res) => {
+  route.get(`/:offerId`, async (req, res) => {
     // Получаем id из параметров запроса и ищем по нему объявление
     const {offerId} = req.params;
-    const offer = offerService.findOne(offerId);
+    const {comments} = req.query;
+    const offer = await offerService.findOne(offerId, comments);
 
     // Если таковое отсутствует, то возвращаем код Not found с сообщением
     if (!offer) {

@@ -1,6 +1,6 @@
 'use strict';
 
-const Aliase = require(`../models/aliase`);
+const Alias = require(`../models/alias`);
 
 class OffersService {
   constructor(sequelize) {
@@ -23,10 +23,10 @@ class OffersService {
   }
 
   async findAll(needComments) {
-    const include = [Aliase.CATEGORIES];
+    const include = [Alias.CATEGORIES];
 
     if (needComments) {
-      include.push(Aliase.COMMENTS);
+      include.push(Alias.COMMENTS);
     }
 
     const offers = await this._Offer.findAll({
@@ -39,8 +39,14 @@ class OffersService {
     return offers.map((offer) => offer.get());
   }
 
-  findOne(id) {
-    return this._Offer.findByPk(id, {include: [Aliase.CATEGORIES]});
+  async findOne(id, needComments) {
+    const include = [Alias.CATEGORIES];
+
+    if (needComments) {
+      include.push(Alias.COMMENTS);
+    }
+
+    return await this._Offer.findByPk(id, {include});
   }
 
   async update(id, offer) {

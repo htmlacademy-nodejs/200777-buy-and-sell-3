@@ -2,7 +2,7 @@
 
 const {Model} = require(`sequelize`);
 
-const Aliase = require(`./aliase`);
+const Alias = require(`./alias`);
 
 const defineCategory = require(`./category`);
 const defineComment = require(`./comment`);
@@ -16,13 +16,13 @@ const define = (sequelize) => {
   const Offer = defineOffer(sequelize);
 
   Offer.hasMany(Comment, {
-    as: Aliase.COMMENTS,
-    foreignKey: `offerId`,
+    as: Alias.COMMENTS,
+    foreignKey: `offer_id`,
     onDelete: `cascade`
   });
 
   Comment.belongsTo(Offer, {
-    foreignKey: `offerId`
+    foreignKey: `offer_id`
   });
 
   OfferCategory.init({}, {
@@ -32,16 +32,16 @@ const define = (sequelize) => {
 
   Offer.belongsToMany(Category, {
     through: OfferCategory,
-    as: Aliase.CATEGORIES
+    as: Alias.CATEGORIES
   });
 
   Category.belongsToMany(Offer, {
     through: OfferCategory,
-    as: Aliase.OFFERS
+    as: Alias.OFFERS
   });
 
   Category.hasMany(OfferCategory, {
-    as: Aliase.OFFER_CATEGORIES
+    as: Alias.OFFER_CATEGORIES
   });
 
   return {Category, Comment, Offer, OfferCategory};

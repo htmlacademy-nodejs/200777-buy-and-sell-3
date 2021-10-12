@@ -6,23 +6,23 @@ class CommentsService {
     this._Comment = sequelize.models.Comment;
   }
 
-  async create(offerId, comment) {
+  create(offerId, comment) {
     return this._Comment.create({
       offerId,
       ...comment
     });
   }
 
-  async drop(commentId) {
+  async drop(id) {
     const deletedRows = await this._Comment.destroy({
-      where: {commentId}
+      where: {id}
     });
 
     return !!deletedRows;
   }
 
-  async findAll(offerId) {
-    return await this._Comment.findAll({
+  findAll(offerId) {
+    return this._Comment.findAll({
       where: {offerId},
       raw: true
     });

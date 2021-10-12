@@ -39,7 +39,7 @@ class API {
   }
 
   getOffer(id, comments) {
-    return this._load(`/offers/${id}`, {params: comments});
+    return this._load(`/offers/${id}`, {params: {comments}});
   }
 
   search(query) {
@@ -50,7 +50,7 @@ class API {
     return this._load(`/categories`, {params: {count}});
   }
 
-  async createOffer(data) {
+  createOffer(data) {
     return this._load(`/offers`, {
       method: `POST`,
       data

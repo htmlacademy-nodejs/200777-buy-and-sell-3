@@ -11,14 +11,14 @@ block content
         ul.search-results__list
           each itemOffer in results
             li.search-results__item
-              .ticket-card.ticket-card--color05
+              +ticketCard()
                 .ticket-card__img
-                  img(src=`/img/${itemOffer.picture}` alt='Изображение товара')
+                  +insertOfferImage(itemOffer)
                 .ticket-card__info
                   +ticketLabel(itemOffer.type)
                   .ticket-card__categories
-                    each category in itemOffer.category
-                      a(href='#') #{category}
+                    each category in itemOffer.categories
+                      a(href='#') #{category.name}
                   .ticket-card__header
                     h3.ticket-card__title
                       a(href='#') #{itemOffer.title}

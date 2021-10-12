@@ -9,13 +9,15 @@ const api = require(`../api`).getAPI();
 const mainRouter = new Router();
 
 mainRouter.get(`/`, async (req, res) => {
+  const values = await Promise.all([
+    api.getOffers({comments: true}),
+    api.getCategories(true)
+  ]);
+
   const [
     allOffers,
     categories
-  ] = await Promise.all([
-    api.getOffers(),
-    api.getCategories(true)
-  ]);
+  ] = values;
 
   res.render(`main`, {allOffers, categories});
 });

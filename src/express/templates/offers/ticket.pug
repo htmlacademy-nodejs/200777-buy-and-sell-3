@@ -19,7 +19,7 @@ block content
               p.ticket__price
                 span.js-sum #{oneOffer.sum}
                 |  ₽
-              p.ticket__action #{oneOffer.type === `OFFER` ? `КУПЛЮ` : `ПРОДАМ`}
+              p.ticket__action #{oneOffer.type === `offer` ? `КУПЛЮ` : `ПРОДАМ`}
             .ticket__desc
               p #{oneOffer.description}
             .ticket__data

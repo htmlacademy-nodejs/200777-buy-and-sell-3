@@ -17,12 +17,12 @@ const define = (sequelize) => {
 
   Offer.hasMany(Comment, {
     as: Alias.COMMENTS,
-    foreignKey: `offer_id`,
+    foreignKey: `offerId`,
     onDelete: `cascade`
   });
 
   Comment.belongsTo(Offer, {
-    foreignKey: `offer_id`
+    foreignKey: `offerId`
   });
 
   OfferCategory.init({}, {

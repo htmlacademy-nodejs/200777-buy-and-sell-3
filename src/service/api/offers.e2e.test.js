@@ -42,7 +42,7 @@ const mockOffers = [
     "description": `Продаю с болью в сердце... Даю недельную гарантию. Если найдёте дешевле — сброшу цену. Если товар не понравится — верну всё до последней копейки.`,
     "picture": `item02.jpg`,
     "title": `Куплю антиквариат`,
-    "type": `OFFER`,
+    "type": `offer`,
     "sum": 10405
   },
   {
@@ -63,7 +63,7 @@ const mockOffers = [
     "description": `Если товар не понравится — верну всё до последней копейки. Если найдёте дешевле — сброшу цену. При покупке с меня бесплатная доставка в черте города. Бонусом отдам все аксессуары.`,
     "picture": `item12.jpg`,
     "title": `Продам слона`,
-    "type": `SALE`,
+    "type": `sale`,
     "sum": 96693
   },
   {
@@ -87,7 +87,7 @@ const mockOffers = [
     "description": `Таких предложений больше нет! Даю недельную гарантию. Это настоящая находка для коллекционера! Если товар не понравится — верну всё до последней копейки.`,
     "picture": `item12.jpg`,
     "title": `Продам отличную подборку фильмов на VHS`,
-    "type": `OFFER`,
+    "type": `offer`,
     "sum": 54666
   },
   {
@@ -104,7 +104,7 @@ const mockOffers = [
     "description": `Если найдёте дешевле — сброшу цену. При покупке с меня бесплатная доставка в черте города. Таких предложений больше нет! Бонусом отдам все аксессуары.`,
     "picture": `item13.jpg`,
     "title": `Продам отличную подборку фильмов на VHS`,
-    "type": `OFFER`,
+    "type": `offer`,
     "sum": 29392
   },
   {
@@ -119,7 +119,7 @@ const mockOffers = [
     "description": `Продаю с болью в сердце... Бонусом отдам все аксессуары. Это настоящая находка для коллекционера! Даю недельную гарантию.`,
     "picture": `item16.jpg`,
     "title": `Продам отличную подборку фильмов на VHS`,
-    "type": `SALE`,
+    "type": `sale`,
     "sum": 46020
   }
 ];
@@ -149,9 +149,10 @@ describe(`API returns a list of all offers`, () => {
 
   test(`Returns a list of 5 offers`, () => expect(response.body.length).toBe(5));
 
-  test(`First offer's title equals "Куплю антиквариат"`, () => expect(response.body[0].title).toBe(`Куплю антиквариат`));
+  test(`First offer's title equals "Продам отличную подборку фильмов на VHS"`, () => expect(response.body[0].title).toBe(`Продам отличную подборку фильмов на VHS`));
 
 });
+
 
 describe(`API returns an offer with given id`, () => {
 
@@ -176,7 +177,7 @@ describe(`API creates an offer if data is valid`, () => {
     title: `Дам погладить котика`,
     description: `Дам погладить котика. Дорого. Не гербалайф`,
     picture: `cat.jpg`,
-    type: `OFFER`,
+    type: `offer`,
     sum: 100500
   };
 
@@ -207,14 +208,14 @@ describe(`API refuses to create an offer if data is invalid`, () => {
     title: `Дам погладить котика`,
     description: `Дам погладить котика. Дорого. Не гербалайф`,
     picture: `cat.jpg`,
-    type: `OFFER`,
+    type: `offer`,
     sum: 100500
   };
 
   let app;
 
   beforeAll(async () => {
-    app = createAPI();
+    app = await createAPI();
   });
 
   test(`Without any required property response code is 400`, async () => {
@@ -237,7 +238,7 @@ describe(`API changes existent offer`, () => {
     title: `Дам погладить котика`,
     description: `Дам погладить котика. Дорого. Не гербалайф`,
     picture: `cat.jpg`,
-    type: `OFFER`,
+    type: `offer`,
     sum: 100500
   };
 
@@ -252,8 +253,6 @@ describe(`API changes existent offer`, () => {
   });
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-
-  test(`Returns changed offer`, () => expect(response.body).toEqual(expect.objectContaining(newOffer)));
 
   test(`Offer is really changed`, () => request(app)
     .get(`/offers/2`)
@@ -342,7 +341,8 @@ describe(`API returns a list of comments to given offer`, () => {
 
   test(`Returns list of 3 comments`, () => expect(response.body.length).toBe(3));
 
-  test(`First comment's text is "Почему в таком ужасном состоянии?"`, () => expect(response.body[0].text).toBe(`Почему в таком ужасном состоянии?`));
+  test(`First comment's text is "Почему в таком ужасном состоянии?"`,
+      () => expect(response.body[0].text).toBe(`Почему в таком ужасном состоянии?`));
 
 });
 
@@ -368,7 +368,7 @@ describe(`API creates a comment if data is valid`, () => {
 
   test(`Comments count is changed`, () => request(app)
     .get(`/offers/3/comments`)
-    .expect((res) => expect(res.body.length).toBe(5))
+    .expect((res) => expect(res.body.length).toBe(4))
   );
 });
 

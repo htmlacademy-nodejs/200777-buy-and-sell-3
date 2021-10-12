@@ -6,7 +6,7 @@ const api = require(`../api`).getAPI();
 const myRouter = new Router();
 
 myRouter.get(`/`, async (req, res) => {
-  const allOffers = await api.getOffers();
+  const allOffers = await api.getOffers({comments: false});
 
   res.render(`my-tickets`, {allOffers});
 });

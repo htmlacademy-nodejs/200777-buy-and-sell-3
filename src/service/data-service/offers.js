@@ -51,7 +51,7 @@ class OffersService {
 
   async update(id, offer) {
     const [affectedRows] = await this._Offer.update(offer, {
-      where: id
+      where: {id}
     });
 
     return !!affectedRows;

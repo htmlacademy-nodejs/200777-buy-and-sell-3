@@ -47,7 +47,7 @@ const readContent = async (filePath) => {
   }
 };
 
-const getRandomPictureFileName = (number) => number > 9 ? `item${number}.jpg` : `item0${number}.jpg`;
+const getRandomPictureFileName = (number) => `item${number.toString().padStart(2, 0)}.jpg`;
 
 const generateComments = (count, comments, offerId, userCount) => (
   Array(count).fill({}).map(() => ({

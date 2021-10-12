@@ -29,6 +29,7 @@ app.use(`/offers`, offersRoutes);
 app.use((req, res) => res.status(HttpCode.NOT_FOUND).render(`errors/404`));
 app.use((err, req, res, _next) => {
   res.status(500).render(`errors/500`);
+  console.log(err);
 });
 
 app.listen(DEFAULT_PORT, () => console.log(`Сервер работает на ${DEFAULT_PORT}`));

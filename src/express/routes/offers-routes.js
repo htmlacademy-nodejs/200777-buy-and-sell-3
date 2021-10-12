@@ -38,14 +38,13 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
     type: body.action,
     description: body.comment,
     title: body[`ticket-name`],
-    category: ensureArray(body.category)
+    categories: ensureArray(body.category)
   };
 
   try {
     await api.createOffer(newOfferData);
     res.redirect(`/my`);
   } catch (error) {
-    console.log(error.message);
     res.redirect(`back`);
   }
 });
@@ -61,9 +60,11 @@ offersRouter.get(`/edit/:id`, async (req, res) => {
   res.render(`offers/ticket-edit`, {oneOffer, categories});
 });
 
-offersRouter.get(`/category/:id`, (req, res) => res.render(`offers/category`));
+offersRouter.get(`/:id`, async (req, res) => {
+  const {id} = req.params;
+  const oneOffer = await api.getOffer(id, true);
 
-offersRouter.get(`/:id`, (req, res) => res.render(`offers/ticket`));
-
+  res.render(`offers/ticket`, {oneOffer});
+});
 
 module.exports = offersRouter;

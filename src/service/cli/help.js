@@ -15,7 +15,7 @@ module.exports = {
 
       --version:            выводит номер версии
       --help:               печатает этот текст
-      --generate <count>    формирует файл mocks.json
+      --filldb <count>      заполняет БД
       --fill <count>        формирует файл fill-bd.sql
     `;
 

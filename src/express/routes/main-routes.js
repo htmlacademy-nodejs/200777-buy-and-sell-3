@@ -9,10 +9,17 @@ const api = require(`../api`).getAPI();
 const mainRouter = new Router();
 
 mainRouter.get(`/`, async (req, res) => {
-  // Делаем запрос на получение всех объявлений
-  const allOffers = await api.getOffers();
-  // Отдаём на рендеринг в pug-шаблон "main"
-  res.render(`main`, {allOffers});
+  const values = await Promise.all([
+    api.getOffers({comments: true}),
+    api.getCategories(true)
+  ]);
+
+  const [
+    allOffers,
+    categories
+  ] = values;
+
+  res.render(`main`, {allOffers, categories});
 });
 
 mainRouter.get(`/register`, (req, res) => res.render(`sign-up`));

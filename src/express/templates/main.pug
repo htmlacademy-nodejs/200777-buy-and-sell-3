@@ -9,91 +9,21 @@ block content
         .tickets-list__header
           p.tickets-list__title Самое свежее
         ul
-          each offer in allOffers
+          each itemOffer in allOffers
             li.tickets-list__item
-              .ticket-card.ticket-card--color01
+              +ticketCard()
                 .ticket-card__img
-                  img(src=`/img/${offer.picture}` alt=offer.title)
+                  +insertOfferImage(itemOffer)
                 .ticket-card__info
-                  +ticketLabel(offer.type)
+                  +ticketLabel(itemOffer.type)
                   .ticket-card__categories
-                    a(href="#") #{offer.category}
+                    each category of itemOffer.categories
+                      a(href="#") #{category.name}
                   .ticket-card__header
                     h3.ticket-card__title
-                      a(href="#") #{offer.title}
+                      a(href="#") #{itemOffer.title}
                     p.ticket-card__price
-                      span.js-sum #{offer.sum}
+                      span.js-sum #{itemOffer.sum}
                       |  ₽
                   .ticket-card__desc
-                    p #{offer.description}
-          
-    section.tickets-list
-      h2.visually-hidden Самые обсуждаемые предложения
-      .tickets-list__wrapper
-        .tickets-list__header
-          p.tickets-list__title Самые обсуждаемые
-        ul
-          li.tickets-list__item
-            .ticket-card.ticket-card--color09
-              .ticket-card__img
-                img(src="/img/item09.jpg" srcset="/img/item09@2x.jpg 2x" alt="Изображение товара")
-              .ticket-card__info
-                span.ticket-card__label Куплю
-                .ticket-card__categories
-                  a(href="#") Дом
-                .ticket-card__header
-                  h3.ticket-card__title
-                    a(href="#") Монстера
-                  p.ticket-card__price
-                    span.js-sum 1000
-                    |  ₽
-                .ticket-card__desc
-                  p Куплю монстеру зеленую в хорошем зеленом состоянии, буду поливать...
-          li.tickets-list__item
-            .ticket-card.ticket-card--color10
-              .ticket-card__img
-                img(src="/img/item10.jpg" srcset="/img/item10@2x.jpg 2x" alt="Изображение товара")
-              .ticket-card__info
-                span.ticket-card__label ПРОДАМ
-                .ticket-card__categories
-                  a(href="#") Дом
-                .ticket-card__header
-                  h3.ticket-card__title
-                    a(href="#") Мое старое кресло
-                  p.ticket-card__price
-                    span.js-sum 4000
-                    |  ₽
-                .ticket-card__desc
-                  p Продам свое старое кресло, чтобы сидеть и читать книги зимними...
-          li.tickets-list__item
-            .ticket-card.ticket-card--color11
-              .ticket-card__img
-                img(src="/img/item11.jpg" srcset="/img/item11@2x.jpg 2x" alt="Изображение товара")
-              .ticket-card__info
-                span.ticket-card__label ПРОДАМ
-                .ticket-card__categories
-                  a(href="#") ЭЛЕКТРОНИКА
-                .ticket-card__header
-                  h3.ticket-card__title
-                    a(href="#") Дедушкины часы
-                  p.ticket-card__price
-                    span.js-sum 45 000
-                    |  ₽
-                .ticket-card__desc
-                  p Продаю дедушкины часы в прекрасном состоянии, ходят до...
-          li.tickets-list__item
-            .ticket-card.ticket-card--color04
-              .ticket-card__img
-                img(src="/img/item04.jpg" srcset="/img/item04@2x.jpg 2x" alt="Изображение товара")
-              .ticket-card__info
-                span.ticket-card__label Куплю
-                .ticket-card__categories
-                  a(href="#") Дом
-                .ticket-card__header
-                  h3.ticket-card__title
-                    a(href="#") Кофеварка
-                  p.ticket-card__price
-                    span.js-sum 2000
-                    |  ₽
-                .ticket-card__desc
-                  p Куплю вот такую итальянскую кофеварку, можно любой фирмы...
+                    p #{itemOffer.description}

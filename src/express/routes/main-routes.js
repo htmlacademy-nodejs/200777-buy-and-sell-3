@@ -6,20 +6,28 @@ const {Router} = require(`express`);
 // на сервер с данными
 const api = require(`../api`).getAPI();
 
+const OFFER_PER_PAGE = 8;
+
 const mainRouter = new Router();
 
 mainRouter.get(`/`, async (req, res) => {
-  const values = await Promise.all([
-    api.getOffers({comments: true}),
+  let {page = 1} = req.query;
+  page = +page;
+
+  const limit = OFFER_PER_PAGE;
+
+  const offset = (page - 1) * OFFER_PER_PAGE;
+  const [
+    {count, offers: allOffers},
+    categories
+  ] = await Promise.all([
+    api.getOffers({limit, offset}),
     api.getCategories(true)
   ]);
 
-  const [
-    allOffers,
-    categories
-  ] = values;
+  const totalPages = Math.ceil(count / OFFER_PER_PAGE);
 
-  res.render(`main`, {allOffers, categories});
+  res.render(`main`, {allOffers, page, totalPages, categories});
 });
 
 mainRouter.get(`/register`, (req, res) => res.render(`sign-up`));

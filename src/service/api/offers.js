@@ -18,13 +18,19 @@ module.exports = (app, offerService, commentService) => {
   // Получить все объявления
   route.get(`/`, async (req, res) => {
     // Находим в сервисе все объявления
-    const {comments} = req.query;
-    const offers = await offerService.findAll({comments});
+    const {offset, limit, comments} = req.query;
+
+    let result;
+    if (limit || offset) {
+      result = await offerService.findPage({limit, offset});
+    } else {
+      result = offerService.findAll(comments);
+    }
 
     // Возвращаем их
     return res
       .status(HttpCode.OK)
-      .send(offers);
+      .json(result);
   });
 
 

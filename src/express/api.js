@@ -34,8 +34,8 @@ class API {
   // Передаём в приватный метод URL `/offers/`
   // По GET - запросу API - сервер вернёт список объявлений
   // Аналогичная работа и в других методах
-  getOffers({comments}) {
-    return this._load(`/offers`, {params: {comments}});
+  getOffers({offset, limit, comments}) {
+    return this._load(`/offers`, {params: {offset, limit, comments}});
   }
 
   getOffer(id, comments) {

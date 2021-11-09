@@ -4,7 +4,7 @@ const {Router} = require(`express`);
 const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
-const {ensureArray} = require(`../../utils`);
+const {ensureArray, prepareErrors} = require(`../../utils`);
 
 const api = require(`../api`).getAPI();
 const offersRouter = new Router();
@@ -24,8 +24,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
+const getAddOfferData = () => {
+  return api.getCategories();
+};
+
 offersRouter.get(`/add`, async (req, res) => {
-  const categories = await api.getCategories();
+  const categories = await getAddOfferData();
   res.render(`offers/new-ticket`, {categories});
 });
 
@@ -45,7 +49,15 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
     await api.createOffer(newOfferData);
     res.redirect(`/my`);
   } catch (error) {
-    res.redirect(`back`);
+    const validationMessages = prepareErrors(error);
+    const categories = await getAddOfferData();
+    res.render(`offers/new-ticket`, {
+      categories,
+      // eslint-disable-next-line no-undef
+      // user,
+      validationMessages,
+      // csrfToken: req.csrfToken()
+    });
   }
 });
 

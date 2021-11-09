@@ -11,9 +11,21 @@ html(lang='ru')
       a.active {
         pointer-events: none;
       }
+      .server-error{
+        border-radius: 10px;
+        color: white;
+        background-color: tomato;
+        margin: 20px 0;
+        padding: 10px;
+      }
   body
     -
       const getRandomInt = (max) => Math.ceil(Math.random()*max);
+
+    mixin insertErrorMessages(messages)
+      if messages
+        each message in messages
+          .server-error= message
 
     mixin ticketLabel(type)
       span(class!=attributes.class || `ticket-card__label`) #{type === `offer` ? `Куплю` : `Продам`}

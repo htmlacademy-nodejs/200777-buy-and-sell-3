@@ -5,10 +5,8 @@ const api = require(`../api`).getAPI();
 
 const myRouter = new Router();
 
-// Будет доделано в следующих модулях. В данный момент: модуль 6, таск 3
-
 myRouter.get(`/`, async (req, res) => {
-  const allOffers = await api.getOffers({comments: false});
+  const allOffers = await api.getOffers();
 
   res.render(`my-tickets`, {allOffers});
 });

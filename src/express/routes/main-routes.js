@@ -2,11 +2,9 @@
 
 const {Router} = require(`express`);
 
-// Импортируем модуль, с помощью которого делаем запросы
-// на сервер с данными
-const api = require(`../api`).getAPI();
+const {OFFER_PER_PAGE} = require(`../../constants`);
 
-const OFFER_PER_PAGE = 8;
+const api = require(`../api`).getAPI();
 
 const mainRouter = new Router();
 

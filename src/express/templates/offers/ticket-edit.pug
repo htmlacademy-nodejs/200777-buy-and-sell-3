@@ -9,7 +9,8 @@ block content
           form.ticket-form__form.form(action='#' method='post' enctype='multipart/form-data' autocomplete='off')
             .ticket-form__avatar-container.js-preview-container.uploaded
               .ticket-form__avatar.js-preview
-                img(src=`/img/${oneOffer.picture}` alt='')
+                +insertOfferImage(oneOffer)
+              inpit(type="hidden" name="old-image" value=offer.picture)
               .ticket-form__field-avatar
                 input#avatar.visually-hidden.js-file-field(type='file' name='avatar')
                 label(for='avatar')

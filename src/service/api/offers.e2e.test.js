@@ -229,6 +229,36 @@ describe(`API refuses to create an offer if data is invalid`, () => {
     }
   });
 
+  test(`When field type is wrong response code is 400`, async () => {
+    const badOffers = [
+      {...newOffer, sum: true},
+      {...newOffer, picture: 12345},
+      {...newOffer, categories: `Котики`}
+    ];
+
+    for (const badOffer of badOffers) {
+      await request(app)
+        .post(`/offers`)
+        .send(badOffer)
+        .expect(HttpCode.BAD_REQUEST);
+    }
+  });
+
+  test(`When field value is wrong response code is 400`, async () => {
+    const badOffers = [
+      {...newOffer, sum: -1},
+      {...newOffer, title: `too short`},
+      {...newOffer, categories: []}
+    ];
+
+    for (const badOffer of badOffers) {
+      await request(app)
+        .post(`/offers`)
+        .send(badOffer)
+        .expect(HttpCode.BAD_REQUEST);
+    }
+  });
+
 });
 
 describe(`API changes existent offer`, () => {

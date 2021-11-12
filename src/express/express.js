@@ -16,6 +16,8 @@ const UPLOAD_DIR = `upload`;
 
 const app = express();
 
+app.use(express.urlencoded({extended: false}));
+
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 

@@ -1,28 +1,13 @@
 'use strict';
 
 const {Router} = require(`express`);
-const multer = require(`multer`);
-const path = require(`path`);
-const {nanoid} = require(`nanoid`);
+
 const {ensureArray, prepareErrors} = require(`../../utils`);
 
+const upload = require(`../middlewares/upload`);
 const api = require(`../api`).getAPI();
 const offersRouter = new Router();
 
-const UPLOAD_DIR = `../upload/img`;
-
-const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
-
-const storage = multer.diskStorage({
-  destination: uploadDirAbsolute,
-  filename: (req, file, cb) => {
-    const uniqueName = nanoid(10);
-    const extension = file.originalname.split(`.`).pop();
-    cb(null, `${uniqueName}.${extension}`);
-  }
-});
-
-const upload = multer({storage});
 
 const getAddOfferData = () => {
   return api.getCategories();
@@ -113,12 +98,12 @@ offersRouter.post(`/edit/:id`, upload.single(`avatar`), async (req, res) => {
   } catch (errors) {
     const validationMessages = prepareErrors(errors);
     const [oneOffer, categories] = await getEditOfferData(id);
-    res.render(`/offers/ticket-edit`, {id, oneOffer, categories, validationMessages});
+    res.render(`offers/ticket-edit`, {id, oneOffer, categories, validationMessages});
   }
 });
 
 
-// Create comment for offer by id
+// Create comment for offer
 offersRouter.post(`/:id/comments`, async (req, res) => {
   const {id} = req.params;
   const {comment} = req.body;
@@ -131,7 +116,7 @@ offersRouter.post(`/:id/comments`, async (req, res) => {
     const oneOffer = await getViewOfferData(id, true);
     res.render(`offers/ticket`, {oneOffer, id, validationMessages});
   }
+  return;
 });
-
 
 module.exports = offersRouter;

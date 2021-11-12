@@ -175,7 +175,7 @@ describe(`API creates an offer if data is valid`, () => {
   const newOffer = {
     categories: [1, 2],
     title: `Дам погладить котика`,
-    description: `Дам погладить котика. Дорого. Не гербалайф`,
+    description: `Дам погладить котика. Дорого. Не гербалайф. К лотку приучен`,
     picture: `cat.jpg`,
     type: `offer`,
     sum: 100500
@@ -200,7 +200,6 @@ describe(`API creates an offer if data is valid`, () => {
   );
 
 });
-
 describe(`API refuses to create an offer if data is invalid`, () => {
 
   const newOffer = {
@@ -266,7 +265,7 @@ describe(`API changes existent offer`, () => {
   const newOffer = {
     categories: [2],
     title: `Дам погладить котика`,
-    description: `Дам погладить котика. Дорого. Не гербалайф`,
+    description: `Дам погладить котика. Дорого. Не гербалайф. К лотку приучен`,
     picture: `cat.jpg`,
     type: `offer`,
     sum: 100500
@@ -297,10 +296,10 @@ test(`API returns status code 404 when trying to change non-existent offer`, asy
 
   const validOffer = {
     categories: [3],
-    title: `Это валидный`,
-    description: `объект`,
-    picture: `объявления`,
-    type: `однако`,
+    title: `Это вполне валидный`,
+    description: `объект объявления, однако поскольку такого объявления в базе нет`,
+    picture: `мы получим 404`,
+    type: `sale`,
     sum: 404
   };
 
@@ -398,7 +397,7 @@ describe(`API creates a comment if data is valid`, () => {
 
   test(`Comments count is changed`, () => request(app)
     .get(`/offers/3/comments`)
-    .expect((res) => expect(res.body.length).toBe(4))
+    .expect((res) => expect(res.body.length).toBe(5))
   );
 });
 

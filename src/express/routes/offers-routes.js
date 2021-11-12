@@ -98,7 +98,7 @@ offersRouter.post(`/edit/:id`, upload.single(`avatar`), async (req, res) => {
   } catch (errors) {
     const validationMessages = prepareErrors(errors);
     const [oneOffer, categories] = await getEditOfferData(id);
-    res.render(`/offers/ticket-edit`, {id, oneOffer, categories, validationMessages});
+    res.render(`offers/ticket-edit`, {id, oneOffer, categories, validationMessages});
   }
 });
 
@@ -118,6 +118,5 @@ offersRouter.post(`/:id/comments`, async (req, res) => {
   }
   return;
 });
-
 
 module.exports = offersRouter;

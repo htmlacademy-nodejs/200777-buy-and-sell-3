@@ -46,7 +46,7 @@ class API {
 
   editOffer(id, data) {
     return this._load(`/offers/${id}`, {
-      method: HttpMethod.POST,
+      method: HttpMethod.PUT,
       data
     });
   }

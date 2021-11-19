@@ -6,7 +6,7 @@ const Sequelize = require(`sequelize`);
 
 const initDB = require(`../lib/init-db`);
 const categories = require(`./categories`);
-const DataService = require(`../data-service/categories`);
+const DataService = require(`../data-service/category`);
 
 const {HttpCode} = require(`../../constants`);
 

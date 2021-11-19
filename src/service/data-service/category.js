@@ -3,7 +3,7 @@
 const Sequelize = require(`sequelize`);
 const Alias = require(`../models/alias`);
 
-class CategoriesService {
+class CategoryService {
   constructor(sequelize) {
     this._Category = sequelize.models.Category;
     this._OfferCategory = sequelize.models.OfferCategory;
@@ -37,4 +37,4 @@ class CategoriesService {
   }
 }
 
-module.exports = CategoriesService;
+module.exports = CategoryService;

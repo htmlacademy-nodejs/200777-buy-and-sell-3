@@ -1,6 +1,6 @@
 'use strict';
 
-class CommentsService {
+class CommentService {
   constructor(sequelize) {
     this._Offer = sequelize.models.Offer;
     this._Comment = sequelize.models.Comment;
@@ -29,4 +29,4 @@ class CommentsService {
   }
 }
 
-module.exports = CommentsService;
+module.exports = CommentService;

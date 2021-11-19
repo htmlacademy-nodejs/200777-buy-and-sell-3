@@ -10,10 +10,10 @@ const sequelize = require(`../lib/sequelize`);
 const defineModels = require(`../models`);
 
 const {
-  CategoriesService,
-  OffersService,
+  CategoryService,
+  OfferService,
   SearchService,
-  CommentsService
+  CommentService
 } = require(`../data-service`);
 
 const app = new Router();
@@ -21,9 +21,9 @@ const app = new Router();
 defineModels(sequelize);
 
 (() => {
-  categories(app, new CategoriesService(sequelize));
+  categories(app, new CategoryService(sequelize));
   search(app, new SearchService(sequelize));
-  offers(app, new OffersService(sequelize), new CommentsService(sequelize));
+  offers(app, new OfferService(sequelize), new CommentService(sequelize));
 })();
 
 module.exports = app;

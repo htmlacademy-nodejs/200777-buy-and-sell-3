@@ -2,18 +2,20 @@
 
 const {Router} = require(`express`);
 
-const categories = require(`./categories`);
-const offers = require(`./offers`);
+const categories = require(`./category`);
+const offers = require(`./offer`);
+const user = require(`./user`);
 const search = require(`./search`);
 
 const sequelize = require(`../lib/sequelize`);
 const defineModels = require(`../models`);
 
 const {
-  CategoriesService,
-  OffersService,
+  CategoryService,
+  OfferService,
   SearchService,
-  CommentsService
+  CommentService,
+  UserService
 } = require(`../data-service`);
 
 const app = new Router();
@@ -21,9 +23,10 @@ const app = new Router();
 defineModels(sequelize);
 
 (() => {
-  categories(app, new CategoriesService(sequelize));
+  categories(app, new CategoryService(sequelize));
   search(app, new SearchService(sequelize));
-  offers(app, new OffersService(sequelize), new CommentsService(sequelize));
+  offers(app, new OfferService(sequelize), new CommentService(sequelize));
+  user(app, new UserService(sequelize));
 })();
 
 module.exports = app;

@@ -62,7 +62,7 @@ const define = (sequelize) => {
   });
 
   Comment.belongsTo(User, {
-    as: Alias.COMMENTS,
+    as: Alias.USERS,
     foreignKey: `userId`
   });
 

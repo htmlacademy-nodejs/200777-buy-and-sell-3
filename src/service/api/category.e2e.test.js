@@ -6,7 +6,7 @@ const Sequelize = require(`sequelize`);
 
 const initDB = require(`../lib/init-db`);
 const passwordUtils = require(`../lib/password`);
-const categories = require(`./categories`);
+const category = require(`./category`);
 const DataService = require(`../data-service/category`);
 
 const {HttpCode} = require(`../../constants`);
@@ -161,7 +161,7 @@ app.use(express.json());
 
 beforeAll(async () => {
   await initDB(mockDB, {categories: mockCategories, offers: mockOffers, users: mockUsers});
-  categories(app, new DataService(mockDB));
+  category(app, new DataService(mockDB));
 });
 
 describe(`API returns category list`, () => {

@@ -6,7 +6,7 @@ const Sequelize = require(`sequelize`);
 
 const initDB = require(`../lib/init-db`);
 const passwordUtils = require(`../lib/password`);
-const offers = require(`./offers`);
+const offer = require(`./offer`);
 const DataService = require(`../data-service/offer`);
 const CommentService = require(`../data-service/comment`);
 
@@ -165,7 +165,7 @@ const createAPI = async () => {
   const app = express();
   app.use(express.json());
 
-  offers(app, new DataService(mockDB), new CommentService(mockDB));
+  offer(app, new DataService(mockDB), new CommentService(mockDB));
   return app;
 };
 

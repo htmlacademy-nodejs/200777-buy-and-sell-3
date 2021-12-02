@@ -28,10 +28,10 @@ block content
                 span #{formatDate(oneOffer.createdAt)}
               p
                 b Автор:
-                a(href='#') #{oneOffer.user.name} 
+                a(href='#') #{oneOffer.users.name} 
               p
                 b Контакты:
-                a(href=`mailto:${oneOffer.user.email}`) #{oneOffer.user.email}
+                a(href=`mailto:${oneOffer.users.email}`) #{oneOffer.users.email}
             ul.ticket__tags
               each category of oneOffer.categories
                 li
@@ -61,7 +61,7 @@ block content
                   .comment-card
                     .comment-card__header
                       a.comment-card__avatar.avatar(href='#')
-                        img(src=`/img/${comment.user.avatar}` alt='Аватар пользователя')
-                      p.comment-card__author #{comment.user.name}
+                        img(src=`/img/${comment.users.avatar}` alt='Аватар пользователя')
+                      p.comment-card__author #{comment.users.name}
                     .comment-card__content
                       p #{comment.text}

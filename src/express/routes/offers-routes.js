@@ -112,7 +112,6 @@ offersRouter.post(`/:id/comments`, async (req, res) => {
     await api.createComment(id, {text: comment});
     res.redirect(`/offers/${id}`);
   } catch (errors) {
-    console.log(errors);
     const validationMessages = prepareErrors(errors);
     const oneOffer = await getViewOfferData(id, true);
     res.render(`offers/ticket`, {oneOffer, id, validationMessages});

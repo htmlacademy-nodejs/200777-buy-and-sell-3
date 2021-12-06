@@ -13,6 +13,7 @@ const api = require(`../api`).getAPI();
 const mainRouter = new Router();
 
 mainRouter.get(`/`, async (req, res) => {
+  const {user} = req.session;
   let {page = 1} = req.query;
   page = +page;
 
@@ -29,11 +30,51 @@ mainRouter.get(`/`, async (req, res) => {
 
   const totalPages = Math.ceil(count / OFFER_PER_PAGE);
 
-  res.render(`main`, {allOffers, page, totalPages, categories});
+  res.render(`main`, {
+    allOffers,
+    page,
+    totalPages,
+    categories,
+    user
+  });
 });
 
+
 mainRouter.get(`/register`, (req, res) => {
-  res.render(`sign-up`);
+  const {user} = req.session;
+  res.render(`sign-up`, {user});
+});
+
+
+mainRouter.get(`/login`, (req, res) => {
+  const {user} = req.session;
+  res.render(`login`, {user});
+});
+
+
+mainRouter.get(`/search`, async (req, res) => {
+  const {user} = req.session;
+
+  try {
+    const {search} = req.query;
+    const results = await api.search(search);
+
+    res.render(`search-result`, {
+      results,
+      user
+    });
+  } catch (error) {
+    res.render(`search-result`, {
+      results: [],
+      user
+    });
+  }
+});
+
+
+mainRouter.get(`/logout`, (req, res) => {
+  delete req.session.user;
+  res.redirect(`/`);
 });
 
 
@@ -51,24 +92,27 @@ mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
     await api.createUser(userData);
     res.redirect(`/login`);
   } catch (errors) {
-    console.log(errors);
     const validationMessages = prepareErrors(errors);
-    res.render(`sign-up`, {validationMessages});
+    const {user} = req.session;
+    res.render(`sign-up`, {
+      validationMessages,
+      user
+    });
   }
 });
 
 
-mainRouter.get(`/login`, (req, res) => res.render(`login`));
-
-
-mainRouter.get(`/search`, async (req, res) => {
+mainRouter.post(`/login`, async (req, res) => {
   try {
-    const {search} = req.query;
-    const results = await api.search(search);
-
-    res.render(`search-result`, {results});
-  } catch (error) {
-    res.render(`search-result`, {results: []});
+    const user = api.auth(req.body[`user-email`], req.body[`user-password`]);
+    req.session.user = user;
+    req.session.save(() => {
+      res.redirect(`/`);
+    });
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    const {user} = req.session;
+    res.render(`login`, {user, validationMessages});
   }
 });
 

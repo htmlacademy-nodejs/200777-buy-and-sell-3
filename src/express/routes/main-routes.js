@@ -3,14 +3,17 @@
 const {Router} = require(`express`);
 
 
+const mainRouter = new Router();
 const {prepareErrors} = require(`../../utils`);
 const upload = require(`../middlewares/upload`);
+const auth = require(`../middlewares/auth`);
 
 const {OFFER_PER_PAGE} = require(`../../constants`);
 
 const api = require(`../api`).getAPI();
 
-const mainRouter = new Router();
+mainRouter.use(auth);
+
 
 mainRouter.get(`/`, async (req, res) => {
   const {user} = req.session;

@@ -67,6 +67,8 @@ offersRouter.get(`/:id`, csrfProtection, async (req, res) => {
   const {id} = req.params;
   const oneOffer = await getViewOfferData(id, true);
 
+  console.log(req.session);
+
   res.render(`offers/ticket`, {
     oneOffer,
     id,
@@ -153,7 +155,7 @@ offersRouter.post(`/:id/comments`, auth, csrfProtection, async (req, res) => {
   const {comment} = req.body;
 
   try {
-    await api.createComment(id, {text: comment});
+    await api.createComment(id, {text: comment, userId: user.id});
     res.redirect(`/offers/${id}`);
   } catch (errors) {
     const validationMessages = prepareErrors(errors);

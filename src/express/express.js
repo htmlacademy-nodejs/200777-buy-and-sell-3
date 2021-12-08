@@ -11,7 +11,7 @@ const offersRoutes = require(`./routes/offers-routes`);
 const {HttpCode} = require(`../constants`);
 
 const sequelize = require(`../service/lib/sequelize`);
-const SequelizeStore = require(`connect-session-sequielize`)(session.Store);
+const SequelizeStore = require(`connect-session-sequelize`)(session.Store);
 
 
 const DEFAULT_PORT = 8080;
@@ -55,8 +55,10 @@ app.use(`/offers`, offersRoutes);
 
 app.use((req, res) => res.status(HttpCode.NOT_FOUND).render(`errors/404`));
 app.use((err, req, res, _next) => {
-  res.status(500).render(`errors/500`);
+  res
+    .status(HttpCode.INTERNAL_SERVER_ERROR)
+    .render(`errors/500`);
   console.log(err);
 });
 
-app.listen(DEFAULT_PORT, () => console.log(`Сервер работает на ${DEFAULT_PORT}`));
+app.listen(DEFAULT_PORT || process.env.PORT, () => console.log(`Сервер работает на ${DEFAULT_PORT}`));

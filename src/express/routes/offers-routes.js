@@ -1,13 +1,18 @@
 'use strict';
 
 const {Router} = require(`express`);
+const csrf = require(`csurf`);
 
 const {ensureArray, prepareErrors} = require(`../../utils`);
 
 const upload = require(`../middlewares/upload`);
+const auth = require(`../middlewares/auth`);
 const api = require(`../api`).getAPI();
-const offersRouter = new Router();
 
+const csrfProtection = csrf();
+
+
+const offersRouter = new Router();
 
 const getAddOfferData = () => {
   return api.getCategories();
@@ -28,32 +33,67 @@ const getViewOfferData = (offerId, comments) => {
 
 
 // Get add offer page
-offersRouter.get(`/add`, async (req, res) => {
+offersRouter.get(`/add`, auth, csrfProtection, async (req, res) => {
+  const {user} = req.session;
   const categories = await getAddOfferData();
-  res.render(`offers/new-ticket`, {categories});
+
+  res.render(`offers/new-ticket`, {
+    categories,
+    user,
+    csrfToken: req.csrfToken()
+  });
 });
 
 
 // Get edit offer by id page
-offersRouter.get(`/edit/:id`, async (req, res) => {
+offersRouter.get(`/edit/:id`, auth, csrfProtection, async (req, res) => {
+  const {user} = req.session;
   const {id} = req.params;
   const [oneOffer, categories] = await getEditOfferData(id);
 
-  res.render(`offers/ticket-edit`, {id, oneOffer, categories});
+  res.render(`offers/ticket-edit`, {
+    id,
+    oneOffer,
+    categories,
+    user,
+    csrfToken: req.csrfToken()
+  });
 });
 
 
 // Get offer by id page
-offersRouter.get(`/:id`, async (req, res) => {
+// offersRouter.get(`/:id`, csrfProtection, async (req, res) => {
+//   const {user} = req.session;
+//   const {id} = req.params;
+//   console.log(id);
+
+//   const oneOffer = await getViewOfferData(id, true);
+
+//   res.render(`offers/ticket`, {
+//     oneOffer,
+//     id,
+//     user,
+//     csrfToken: req.csrfToken()
+//   });
+// });
+
+offersRouter.get(`/:id`, csrfProtection, async (req, res) => {
+  const {user} = req.session;
   const {id} = req.params;
   const oneOffer = await getViewOfferData(id, true);
+  res.render(`offers/ticket`, {oneOffer, id, user, csrfToken: req.csrfToken()});
+});
 
-  res.render(`offers/ticket`, {oneOffer, id});
+
+offersRouter.get(`/category/:id`, (req, res) => {
+  const {user} = req.session;
+  res.render(`category`, {user});
 });
 
 
 // Create new offer
-offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
+offersRouter.post(`/add`, auth, upload.single(`avatar`), csrfProtection, async (req, res) => {
+  const {user} = req.session;
   const {body, file} = req;
 
   const newOfferData = {
@@ -62,25 +102,29 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
     type: body.action,
     description: body.comment,
     title: body[`ticket-name`],
-    categories: ensureArray(body.category)
+    categories: ensureArray(body.category),
+    userId: user.id
   };
 
   try {
     await api.createOffer(newOfferData);
     res.redirect(`/my`);
-  } catch (error) {
-    const validationMessages = prepareErrors(error);
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
     const categories = await getAddOfferData();
     res.render(`offers/new-ticket`, {
       categories,
-      validationMessages
+      user,
+      validationMessages,
+      csrfToken: req.csrfToken()
     });
   }
 });
 
 
 // Create offer's changes
-offersRouter.post(`/edit/:id`, upload.single(`avatar`), async (req, res) => {
+offersRouter.post(`/edit/:id`, auth, upload.single(`avatar`), csrfProtection, async (req, res) => {
+  const {user} = req.session;
   const {body, file} = req;
   const {id} = req.params;
   const offerData = {
@@ -89,7 +133,8 @@ offersRouter.post(`/edit/:id`, upload.single(`avatar`), async (req, res) => {
     type: body.action,
     description: body.comment,
     title: body[`ticket-name`],
-    categories: ensureArray(body.category)
+    categories: ensureArray(body.category),
+    userId: user.id
   };
 
   try {
@@ -98,23 +143,37 @@ offersRouter.post(`/edit/:id`, upload.single(`avatar`), async (req, res) => {
   } catch (errors) {
     const validationMessages = prepareErrors(errors);
     const [oneOffer, categories] = await getEditOfferData(id);
-    res.render(`offers/ticket-edit`, {id, oneOffer, categories, validationMessages});
+    res.render(`offers/ticket-edit`, {
+      id,
+      oneOffer,
+      categories,
+      user,
+      validationMessages,
+      csrfToken: req.csrfToken()
+    });
   }
 });
 
 
 // Create comment for offer
-offersRouter.post(`/:id/comments`, async (req, res) => {
+offersRouter.post(`/:id/comments`, auth, csrfProtection, async (req, res) => {
+  const {user} = req.session;
   const {id} = req.params;
   const {comment} = req.body;
 
   try {
-    await api.createComment(id, {text: comment});
+    await api.createComment(id, {text: comment, userId: user.id});
     res.redirect(`/offers/${id}`);
   } catch (errors) {
     const validationMessages = prepareErrors(errors);
     const oneOffer = await getViewOfferData(id, true);
-    res.render(`offers/ticket`, {oneOffer, id, validationMessages});
+    res.render(`offers/ticket`, {
+      oneOffer,
+      id,
+      validationMessages,
+      user,
+      csrfToken: req.csrfToken()
+    });
   }
   return;
 });

@@ -4,7 +4,7 @@ block content
   -
     const formatDate = (dateString) => {
       const date = new Date(dateString);
-      return date.toLocaleDateString();
+      return date.toLocaleString();
     }
   main.page-content
     section.ticket
@@ -28,7 +28,7 @@ block content
                 span #{formatDate(oneOffer.createdAt)}
               p
                 b Автор:
-                a(href='#') #{oneOffer.users.name} 
+                a(href='#') #{oneOffer.users.name}
               p
                 b Контакты:
                 a(href=`mailto:${oneOffer.users.email}`) #{oneOffer.users.email}
@@ -40,17 +40,18 @@ block content
                       +categoryImage(category)
                     span.category-tile__label #{category.name}
         .ticket__comments
-          h2.ticket__subtitle Коментарии
+          h2.ticket__subtitle Комментарии
           .ticket__comment-form
             form.form.comment-form(action=`/offers/${id}/comments` method='post' enctype='application/x-www-form-urlencoded'
              autocomplete='off')
+              input(type='hidden' name='_csrf' value=csrfToken)
               .comment-form__header
                 a.comment-form__avatar.avatar(href='#')
                   img(src='/img/avatar.jpg' srcset='/img/avatar@2x.jpg 2x' alt='Аватар пользователя')
                 p.comment-form__author Вам слово
               .comment-form__field
                 .form__field
-                  textarea#comment-field.js-field(name='comment' cols='30' rows='10' maxlength='400' minlength='50') Нормальное вообще кресло! А как насч
+                  textarea#comment-field.js-field(name='comment' cols='30' rows='10') Нормальное вообще кресло! А как насч
                   label(for='comment-field') Текст комментария
                   span Обязательное поле
               +insertErrorMessages(validationMessages)

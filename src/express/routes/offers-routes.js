@@ -62,19 +62,26 @@ offersRouter.get(`/edit/:id`, auth, csrfProtection, async (req, res) => {
 
 
 // Get offer by id page
+// offersRouter.get(`/:id`, csrfProtection, async (req, res) => {
+//   const {user} = req.session;
+//   const {id} = req.params;
+//   console.log(id);
+
+//   const oneOffer = await getViewOfferData(id, true);
+
+//   res.render(`offers/ticket`, {
+//     oneOffer,
+//     id,
+//     user,
+//     csrfToken: req.csrfToken()
+//   });
+// });
+
 offersRouter.get(`/:id`, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
   const oneOffer = await getViewOfferData(id, true);
-
-  console.log(req.session);
-
-  res.render(`offers/ticket`, {
-    oneOffer,
-    id,
-    user,
-    csrfToken: req.csrfToken()
-  });
+  res.render(`offers/ticket`, {oneOffer, id, user, csrfToken: req.csrfToken()});
 });
 
 

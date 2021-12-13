@@ -6,13 +6,10 @@ const {Router} = require(`express`);
 const mainRouter = new Router();
 const {prepareErrors} = require(`../../utils`);
 const upload = require(`../middlewares/upload`);
-const auth = require(`../middlewares/auth`);
 
 const {OFFER_PER_PAGE} = require(`../../constants`);
 
 const api = require(`../api`).getAPI();
-
-mainRouter.use(auth);
 
 
 mainRouter.get(`/`, async (req, res) => {
@@ -107,7 +104,7 @@ mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
 
 mainRouter.post(`/login`, async (req, res) => {
   try {
-    const user = api.auth(req.body[`user-email`], req.body[`user-password`]);
+    const user = await api.auth(req.body[`user-email`], req.body[`user-password`]);
     req.session.user = user;
     req.session.save(() => {
       res.redirect(`/`);

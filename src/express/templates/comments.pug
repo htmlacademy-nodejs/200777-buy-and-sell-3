@@ -1,28 +1,42 @@
 extends layout.pug
 
 block content
+
+  -
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return date.toLocaleString('ru-RU', {day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'});
+    }
+
   main.page-content
     section.comments
       .comments__wrapper
         h1.visually-hidden Страница комментариев
-        each itemOffer in allOffers
-          .comments__block
-            .comments__header
-              a.announce-card(href="#")
-                h2.announce-card__title #{itemOffer.title}
-                span.announce-card__info
-                  span.announce-card__price ₽ #{itemOffer.sum}
-                  +ticketLabel(itemOffer.type)(class=`announce-card__type`)
-            ul.comments-list
-              each comment in itemOffer.comments
-                li.js-card
-                  .comment-card
-                    .comment-card__header
-                      a.comment-card__avatar.avatar(href="#")
-                        img(src=`/img/${comment.users.avatar}` alt="Аватар пользователя")
-                      p.comment-card__author #{comment.users.name}
-                    .comment-card__content
-                      p
-                        | #{comment.text}
-                    button.comment-card__delete.js-delete(type="button") Удалить
-              
+        if (allOffers.current.length === 0)
+          include partials/comments-empty
+        else
+          each itemOffer in allOffers.current
+            .comments__block
+              .comments__header
+                a.announce-card(href=`/offers/${itemOffer.id}`)
+                  h2.announce-card__title #{itemOffer.title}
+                  span.announce-card__info
+                    span.announce-card__price ₽ #{itemOffer.sum}
+                    +ticketLabel(itemOffer.type)(class=`announce-card__type`)
+              ul.comments-list
+                each comment in itemOffer.comments
+                  li.js-card
+                    .comment-card
+                      .comment-card__header
+                        a.comment-card__avatar.avatar(href='/my/comments')
+                          img(src=`/img/${comment.users.avatar}` alt="Аватар пользователя")
+                        p.comment-card__author #{comment.users.name}
+                        p.comment-card__date #{formatDate(comment.createdAt)}
+                      .comment-card__content
+                        p
+                          | #{comment.text}
+                      a.comment-card__delete(
+                        href=`/offers/${itemOffer.id}/comments/${comment.id}`
+                      )
+                        | Удалить
+                

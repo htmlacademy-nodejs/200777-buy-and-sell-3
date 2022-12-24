@@ -5,25 +5,15 @@ block content
     section.search-results
       h1.visually-hidden Результаты поиска
       .search-results__wrapper
-        p.search-results__label
-          | Найдено 
-          span.js-results #{results.length} публикации
-        ul.search-results__list
-          each itemOffer in results
-            li.search-results__item
-              +ticketCard()
-                .ticket-card__img
-                  +insertOfferImage(itemOffer)
-                .ticket-card__info
-                  +ticketLabel(itemOffer.type)
-                  .ticket-card__categories
-                    each category in itemOffer.categories
-                      a(href='#') #{category.name}
-                  .ticket-card__header
-                    h3.ticket-card__title
-                      a(href='#') #{itemOffer.title}
-                    p.ticket-card__price
-                      span.js-sum #{itemOffer.sum}
-                      |  ₽
-                  .ticket-card__desc
-                    p #{itemOffer.description}
+        if (result.length === 0)
+          include partials/search-empty.pug
+        else
+          p.search-results__label
+            | Найдено 
+            span.js-results #{results.length} публикации
+          ul.search-results__list
+            each itemOffer in result
+              li.search-results__item
+                include partials/offer-card.pug
+  if (allOffers.recent.length > 0)
+    include partials/offers-newest.pug

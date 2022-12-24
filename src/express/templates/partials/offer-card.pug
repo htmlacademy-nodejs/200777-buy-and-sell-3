@@ -1,0 +1,16 @@
++ticketCard()
+  .ticket-card__img
+    +insertOfferImage(itemOffer)
+  .ticket-card__info
+    +ticketLabel(itemOffer.type)
+    .ticket-card__categories
+      each category of itemOffer.categories
+        a(href=`/offers/category/${category.id}`) #{category.name}
+    .ticket-card__header
+      h3.ticket-card__title
+        a(href=`/offers/${itemOffer.id}`) #{itemOffer.title}
+      p.ticket-card__price
+        span.js-sum #{itemOffer.sum}
+        |  ₽
+    +tiketCardDescription(itemOffer.description)
+  

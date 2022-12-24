@@ -2,29 +2,10 @@ extends layout.pug
 
 block content
   main.page-content
-    include partials/categories.pug
-    section.tickets-list
-      h2.visually-hidden Самые новые предложения
-      .tickets-list__wrapper
-        .tickets-list__header
-          p.tickets-list__title Самое свежее
-        ul
-          each itemOffer in allOffers
-            li.tickets-list__item
-              +ticketCard()
-                .ticket-card__img
-                  +insertOfferImage(itemOffer)
-                .ticket-card__info
-                  +ticketLabel(itemOffer.type)
-                  .ticket-card__categories
-                    each category of itemOffer.categories
-                      a(href="#") #{category.name}
-                  .ticket-card__header
-                    h3.ticket-card__title
-                      a(href=`/offers/${itemOffer.id}`) #{itemOffer.title}
-                    p.ticket-card__price
-                      span.js-sum #{itemOffer.sum}
-                      |  ₽
-                  .ticket-card__desc
-                    p #{itemOffer.description}
-    +pagination(page, totalPages, 2, `?`)
+    if (offers.recent.length > 0)
+      include partials/categories.pug
+      include partials/offers-newest.pug
+      if (offers.commented.length > 0)
+        include partials/offers-discussed.pug
+    else
+      include partials/main-empty.pug

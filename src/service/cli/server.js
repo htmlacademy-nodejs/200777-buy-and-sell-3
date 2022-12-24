@@ -2,14 +2,21 @@
 
 const sequelize = require(`../lib/sequelize`);
 const express = require(`express`);
+const http = require(`http`);
 
 const {HttpCode, API_PREFIX, ExitCode} = require(`../../constants`);
 const routes = require(`../api`);
 const {getLogger} = require(`../lib/logger`);
+const socket = require(`../lib/socket`);
 
 const DEFAULT_PORT = 3000;
 
 const app = express();
+const server = http.createServer(app);
+
+const io = socket(server);
+app.locals.socketio = io;
+
 const logger = getLogger({name: `api`});
 
 app.use(express.json());
@@ -55,7 +62,7 @@ module.exports = {
     const port = Number.parseInt(customPort, 10) || DEFAULT_PORT;
 
     try {
-      app.listen(port, (err) => {
+      server.listen(port, (err) => {
         if (err) {
           return logger.error(`An error occured on server sreation: ${err.message}`);
         }

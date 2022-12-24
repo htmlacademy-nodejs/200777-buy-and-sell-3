@@ -6,6 +6,7 @@ const offerValidator = require(`../middlewares/offer-validator`);
 const commentValidator = require(`../middlewares/comment-validator`);
 const routeParamsValidator = require(`../middlewares/route-params-validator`);
 const offerExists = require(`../middlewares/offer-exists`);
+const {adaptToClient} = require(`../lib/adapt-to-client`);
 
 
 module.exports = (app, offerService, commentService) => {
@@ -15,26 +16,36 @@ module.exports = (app, offerService, commentService) => {
 
   // Get all offers
   route.get(`/`, async (req, res) => {
-    const {offset, limit, comments} = req.query;
+    const {offset, limit, withComments, userId, categoryId} = req.query;
 
-    let result;
-    if (limit || offset) {
-      result = await offerService.findPage({limit, offset});
-    } else {
-      result = await offerService.findAll(comments);
+    let offers = {};
+
+    if (userId) {
+      offers.current = await offerService.findAll({userId, withComments});
+      return res
+        .status(HttpCode.OK)
+        .json(offers);
     }
 
-    res
+    if (categoryId) {
+      offers.current = await offerService.findPage({limit, offset, categoryId});
+    } else {
+      offers.recent = await offerService.findLimit({limit});
+      offers.commented = await offerService.findLimit({limit, withComments: true});
+    }
+
+    return res
       .status(HttpCode.OK)
-      .json(result);
+      .json(offers);
   });
 
 
   // Get offer by id
   route.get(`/:offerId`, routeParamsValidator, async (req, res) => {
     const {offerId} = req.params;
-    const {comments} = req.query;
-    const offer = await offerService.findOne(offerId, comments);
+    const {userId, withComments} = req.query;
+
+    const offer = await offerService.findOne({offerId, userId, withComments});
 
     if (!offer) {
       return res
@@ -62,11 +73,16 @@ module.exports = (app, offerService, commentService) => {
 
   // Create offer
   route.post(`/`, offerValidator, async (req, res) => {
-    const offer = await offerService.create(req.body);
+    const data = await offerService.create(req.body);
+
+    const adaptedOffer = adaptToClient(await offerService.findOne({offerId: data.id}));
+
+    const io = req.app.locals.socketio;
+    io.emit(`offer:create`, adaptedOffer);
 
     res
       .status(HttpCode.CREATED)
-      .json(offer);
+      .json(data);
   });
 
 
@@ -85,7 +101,7 @@ module.exports = (app, offerService, commentService) => {
   route.put(`/:offerId`, [routeParamsValidator, offerValidator], async (req, res) => {
     const {offerId} = req.params;
 
-    const updated = await offerService.update(offerId, req.body);
+    const updated = await offerService.update({id: offerId, offer: req.body});
 
     if (!updated) {
       return res
@@ -102,7 +118,9 @@ module.exports = (app, offerService, commentService) => {
   // Delete offer
   route.delete(`/:offerId`, routeParamsValidator, async (req, res) => {
     const {offerId} = req.params;
-    const offer = await offerService.drop(offerId);
+    const {userId} = req.body;
+
+    const offer = await offerService.findOne({offerId});
 
     if (!offer) {
       return res
@@ -110,25 +128,43 @@ module.exports = (app, offerService, commentService) => {
         .send(`Not found`);
     }
 
+    const deletedOffer = await offerService.drop({userId, offerId});
+
+    if (!deletedOffer) {
+      return res
+        .status(HttpCode.FORBIDDEN)
+        .send(`Forbidden`);
+    }
+
     return res
       .status(HttpCode.OK)
-      .json(offer);
+      .json(deletedOffer);
   });
 
 
   // Delete comment
   route.delete(`/:offerId/comments/:commentId`, [routeParamsValidator, offerExists(offerService)], async (req, res) => {
-    const {commentId} = req.params;
-    const deleted = await commentService.drop(commentId);
+    const {offerId, commentId} = req.params;
+    const {userId} = req.body;
 
-    if (!deleted) {
+    const comment = await commentService.findOne(commentId, offerId);
+
+    if (!comment) {
       return res
         .status(HttpCode.NOT_FOUND)
         .send(`Not found`);
     }
 
+    const deletedComment = await commentService.drop(userId, offerId, commentId);
+
+    if (!deletedComment) {
+      return res
+        .status(HttpCode.FORBIDDEN)
+        .send(`Forbidden`);
+    }
+
     return res
       .status(HttpCode.OK)
-      .json(deleted);
+      .json(deletedComment);
   });
 };

@@ -27,4 +27,4 @@ module.exports.HttpMethod = {
   PUT: `PUT`,
   DELETE: `DELETE`
 };
-module.exports.OFFER_PER_PAGE = 8;
+module.exports.OFFERS_PER_PAGE = 8;

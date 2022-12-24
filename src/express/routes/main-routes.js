@@ -7,33 +7,26 @@ const mainRouter = new Router();
 const {prepareErrors} = require(`../../utils`);
 const upload = require(`../middlewares/upload`);
 
-const {OFFER_PER_PAGE} = require(`../../constants`);
+const {OFFERS_PER_PAGE} = require(`../../constants`);
 
 const api = require(`../api`).getAPI();
 
 
 mainRouter.get(`/`, async (req, res) => {
   const {user} = req.session;
-  let {page = 1} = req.query;
-  page = +page;
 
-  const limit = OFFER_PER_PAGE;
+  const limit = OFFERS_PER_PAGE;
 
-  const offset = (page - 1) * OFFER_PER_PAGE;
   const [
-    {count, offers: allOffers},
+    offers,
     categories
   ] = await Promise.all([
-    api.getOffers({limit, offset}),
-    api.getCategories(true)
+    api.getOffers({limit}),
+    api.getCategories({withCount: true})
   ]);
 
-  const totalPages = Math.ceil(count / OFFER_PER_PAGE);
-
   res.render(`main`, {
-    allOffers,
-    page,
-    totalPages,
+    allOffers: offers,
     categories,
     user
   });
@@ -54,18 +47,29 @@ mainRouter.get(`/login`, (req, res) => {
 
 mainRouter.get(`/search`, async (req, res) => {
   const {user} = req.session;
+  const {query} = req.query;
+
+  const limit = OFFERS_PER_PAGE;
 
   try {
-    const {search} = req.query;
-    const results = await api.search(search);
+    const [result, offers] = await Promise.all([
+      api.search({query}),
+      api.getOffers({limit})
+    ]);
 
     res.render(`search-result`, {
-      results,
+      query,
+      result,
+      allOffers: offers,
       user
     });
   } catch (error) {
+    const allOffers = api.getOffers({limit});
+
     res.render(`search-result`, {
-      results: [],
+      query,
+      result: [],
+      allOffers,
       user
     });
   }
@@ -74,7 +78,9 @@ mainRouter.get(`/search`, async (req, res) => {
 
 mainRouter.get(`/logout`, (req, res) => {
   delete req.session.user;
-  res.redirect(`/`);
+  req.session.save(() => {
+    res.redirect(`/`);
+  });
 });
 
 
@@ -89,7 +95,7 @@ mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
   };
 
   try {
-    await api.createUser(userData);
+    await api.createUser({data: userData});
     res.redirect(`/login`);
   } catch (errors) {
     const validationMessages = prepareErrors(errors);
@@ -103,8 +109,11 @@ mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
 
 
 mainRouter.post(`/login`, async (req, res) => {
+  const email = req.body[`user-email`];
+  const password = req.body[`user-password`];
+
   try {
-    const user = await api.auth(req.body[`user-email`], req.body[`user-password`]);
+    const user = await api.auth({email, password});
     req.session.user = user;
     req.session.save(() => {
       res.redirect(`/`);

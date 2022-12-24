@@ -9,7 +9,7 @@ block content
         a.tickets-list__btn.btn.btn--big(href="/offers/add")
           span Новая публикация
       ul
-        each itemOffer of allOffers
+        each itemOffer of allOffers.current
           li.tickets-list__item.js-card
             +ticketCard()
               .ticket-card__img
@@ -18,11 +18,11 @@ block content
                 +ticketLabel(itemOffer.type)
                 .ticket-card__categories
                   each category of itemOffer.categories
-                    a(href="#") #{category.name}
+                    a(href=`/offers/category/${category.id}`) #{category.name}
                 .ticket-card__header
                   h3.ticket-card__title
-                    a(href="#") #{itemOffer.title}
+                    a(href=`/offers/edit/${itemOffer.id}`) #{itemOffer.title}
                   p.ticket-card__price
                     span.js-sum #{itemOffer.sum}
                     |  ₽
-              button.ticket-card__del.js-delete(type="button") Удалить
+              a.ticket-card__del(href=`/offers/${itemOffer.id}`) Удалить

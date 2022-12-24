@@ -11,7 +11,7 @@ myRouter.use(auth);
 
 myRouter.get(`/`, async (req, res) => {
   const {user} = req.session;
-  const allOffers = await api.getOffers();
+  const allOffers = await api.getOffers({userId: user.id});
 
   res.render(`my-tickets`, {
     user,
@@ -21,11 +21,11 @@ myRouter.get(`/`, async (req, res) => {
 
 myRouter.get(`/comments`, async (req, res) => {
   const {user} = req.session;
-  const offers = await api.getOffers();
+  const offers = await api.getOffers({userId: user.id, withComments: true});
 
   res.render(`comments`, {
     user,
-    allOffers: offers.slice(0, 3),
+    allOffers: offers,
   });
 });
 

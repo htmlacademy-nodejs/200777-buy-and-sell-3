@@ -2,7 +2,7 @@
 
 const {Router} = require(`express`);
 
-const categories = require(`./category`);
+const category = require(`./category`);
 const offers = require(`./offer`);
 const user = require(`./user`);
 const search = require(`./search`);
@@ -23,7 +23,7 @@ const app = new Router();
 defineModels(sequelize);
 
 (() => {
-  categories(app, new CategoryService(sequelize));
+  category(app, new CategoryService(sequelize));
   search(app, new SearchService(sequelize));
   offers(app, new OfferService(sequelize), new CommentService(sequelize));
   user(app, new UserService(sequelize));

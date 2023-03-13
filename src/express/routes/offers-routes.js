@@ -33,7 +33,6 @@ const getViewOfferData = ({id}) => {
 };
 
 
-// Get offers by category
 offersRouter.get(`/category/:categoryId`, async (req, res) => {
   const {user} = req.session;
   const {categoryId} = req.params;
@@ -67,7 +66,7 @@ offersRouter.get(`/category/:categoryId`, async (req, res) => {
   });
 });
 
-// Get add offer page
+
 offersRouter.get(`/add`, auth, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const categories = await getAddOfferData();
@@ -80,16 +79,15 @@ offersRouter.get(`/add`, auth, csrfProtection, async (req, res) => {
 });
 
 
-// Get edit offer by id page
 offersRouter.get(`/edit/:id`, auth, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
 
   try {
-    const [oneOffer, categories] = await getEditOfferData({id, userId: user.id});
+    const [offer, categories] = await getEditOfferData({id, userId: user.id});
     res.render(`offers/ticket-edit`, {
       id,
-      oneOffer,
+      oneOffer: offer,
       categories,
       user,
       csrfToken: req.csrfToken()
@@ -100,7 +98,6 @@ offersRouter.get(`/edit/:id`, auth, csrfProtection, async (req, res) => {
 });
 
 
-// Get offer by id page
 offersRouter.get(`/:id`, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
@@ -109,12 +106,11 @@ offersRouter.get(`/:id`, csrfProtection, async (req, res) => {
 });
 
 
-// Create new offer
 offersRouter.post(`/add`, auth, upload.single(`avatar`), csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {body, file} = req;
 
-  const newOfferData = {
+  const offerData = {
     picture: file ? file.filename : ``,
     sum: body.price,
     type: body.action,
@@ -125,7 +121,7 @@ offersRouter.post(`/add`, auth, upload.single(`avatar`), csrfProtection, async (
   };
 
   try {
-    await api.createOffer({data: newOfferData});
+    await api.createOffer({data: offerData});
     res.redirect(`/my`);
   } catch (errors) {
     const validationMessages = prepareErrors(errors);
@@ -140,7 +136,6 @@ offersRouter.post(`/add`, auth, upload.single(`avatar`), csrfProtection, async (
 });
 
 
-// Create offer's changes
 offersRouter.post(`/edit/:id`, auth, upload.single(`avatar`), csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {body, file} = req;
@@ -175,7 +170,6 @@ offersRouter.post(`/edit/:id`, auth, upload.single(`avatar`), csrfProtection, as
 });
 
 
-// Create comment for offer
 offersRouter.post(`/:id/comments`, auth, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
@@ -206,7 +200,6 @@ offersRouter.post(`/:id/comments`, auth, csrfProtection, async (req, res) => {
 });
 
 
-// Delete offer by id
 offersRouter.delete(`/:id`, auth, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
@@ -221,7 +214,6 @@ offersRouter.delete(`/:id`, auth, async (req, res) => {
 });
 
 
-// Delete a comment by id
 offersRouter.delete(`/:id/comments/:commentId`, auth, async (req, res) => {
   const {user} = req.session;
   const {id, commentId} = req.params;

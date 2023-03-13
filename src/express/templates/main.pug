@@ -2,10 +2,10 @@ extends layout.pug
 
 block content
   main.page-content
-    if (offers.recent.length > 0)
+    if (allOffers.recent.length > 0)
       include partials/categories.pug
       include partials/offers-newest.pug
-      if (offers.commented.length > 0)
+      if (allOffers.commented.length > 0)
         include partials/offers-discussed.pug
     else
       include partials/main-empty.pug

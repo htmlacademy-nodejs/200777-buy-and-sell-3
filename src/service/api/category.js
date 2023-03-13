@@ -12,7 +12,7 @@ module.exports = (app, service) => {
   route.get(`/`, async (req, res) => {
     const {withCount} = req.query;
 
-    const categories = await service.findAll({withCount});
+    const categories = await service.findAll(withCount);
 
     res
       .status(HttpCode.OK)

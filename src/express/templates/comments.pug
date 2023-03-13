@@ -15,7 +15,7 @@ block content
         if (allOffers.current.length === 0)
           include partials/comments-empty
         else
-          each itemOffer in allOffers.current
+          each itemOffer of allOffers.current
             .comments__block
               .comments__header
                 a.announce-card(href=`/offers/${itemOffer.id}`)
@@ -24,7 +24,7 @@ block content
                     span.announce-card__price ₽ #{itemOffer.sum}
                     +ticketLabel(itemOffer.type)(class=`announce-card__type`)
               ul.comments-list
-                each comment in itemOffer.comments
+                each comment of itemOffer.comments
                   li.js-card
                     .comment-card
                       .comment-card__header
@@ -39,4 +39,3 @@ block content
                         href=`/offers/${itemOffer.id}/comments/${comment.id}`
                       )
                         | Удалить
-                

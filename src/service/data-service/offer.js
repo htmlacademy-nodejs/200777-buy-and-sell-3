@@ -5,7 +5,7 @@ const Alias = require(`../models/alias`);
 
 class OfferService {
   constructor(sequelize) {
-    this._sequelize = Sequelize;
+    this._sequelize = sequelize;
     this._Offer = sequelize.models.Offer;
     this._Comment = sequelize.models.Comment;
     this._Category = sequelize.models.Category;

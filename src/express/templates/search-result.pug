@@ -9,10 +9,10 @@ block content
           include partials/search-empty.pug
         else
           p.search-results__label
-            | Найдено 
-            span.js-results #{results.length} публикации
+            | Найдено
+            span.js-results #{results.length} публикаций
           ul.search-results__list
-            each itemOffer in result
+            each itemOffer of result
               li.search-results__item
                 include partials/offer-card.pug
   if (allOffers.recent.length > 0)

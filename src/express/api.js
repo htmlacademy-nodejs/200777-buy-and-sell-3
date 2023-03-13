@@ -38,12 +38,12 @@ class API {
   }
 
   getCategories({withCount}) {
-    return this._load(`/categories`, {params: {withCount}});
+    return this._load(`/category`, {params: {withCount}});
   }
 
   createOffer({data}) {
     return this._load(`/offers`, {
-      method: `POST`,
+      method: HttpMethod.POST,
       data
     });
   }

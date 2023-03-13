@@ -11,11 +11,11 @@ myRouter.use(auth);
 
 myRouter.get(`/`, async (req, res) => {
   const {user} = req.session;
-  const allOffers = await api.getOffers({userId: user.id});
+  const offers = await api.getOffers({userId: user.id});
 
   res.render(`my-tickets`, {
     user,
-    allOffers
+    allOffers: offers
   });
 });
 

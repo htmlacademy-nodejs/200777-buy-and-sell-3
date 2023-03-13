@@ -14,7 +14,6 @@ module.exports = (app, offerService, commentService) => {
   app.use(`/offers`, route);
 
 
-  // Get all offers
   route.get(`/`, async (req, res) => {
     const {offset, limit, withComments, userId, categoryId} = req.query;
 
@@ -40,7 +39,6 @@ module.exports = (app, offerService, commentService) => {
   });
 
 
-  // Get offer by id
   route.get(`/:offerId`, routeParamsValidator, async (req, res) => {
     const {offerId} = req.params;
     const {userId, withComments} = req.query;
@@ -71,7 +69,6 @@ module.exports = (app, offerService, commentService) => {
   });
 
 
-  // Create offer
   route.post(`/`, offerValidator, async (req, res) => {
     const data = await offerService.create(req.body);
 
@@ -80,7 +77,7 @@ module.exports = (app, offerService, commentService) => {
     const io = req.app.locals.socketio;
     io.emit(`offer:create`, adaptedOffer);
 
-    res
+    return res
       .status(HttpCode.CREATED)
       .json(data);
   });
@@ -91,13 +88,12 @@ module.exports = (app, offerService, commentService) => {
     const {offerId} = req.params;
     const comment = await commentService.create(offerId, req.body);
 
-    res
+    return res
       .status(HttpCode.CREATED)
       .json(comment);
   });
 
 
-  // Update offer
   route.put(`/:offerId`, [routeParamsValidator, offerValidator], async (req, res) => {
     const {offerId} = req.params;
 

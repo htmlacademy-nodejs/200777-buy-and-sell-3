@@ -3,8 +3,8 @@
 const {Router} = require(`express`);
 const csrf = require(`csurf`);
 
-const {ensureArray, prepareErrors} = require(`../../utils`);
-const {HttpCode, OFFERS_PER_PAGE} = require(`../../constants`);
+const {ensureArray, prepareErrors, formatDate} = require(`../../utils`);
+const {HttpCode, OFFERS_PER_PAGE, TypeFormatDate} = require(`../../constants`);
 
 const upload = require(`../middlewares/upload`);
 const auth = require(`../middlewares/auth`);
@@ -50,7 +50,7 @@ offersRouter.get(`/category/:categoryId`, async (req, res) => {
 
   const totalPages = Math.ceil(count / OFFERS_PER_PAGE);
 
-  const offers = {
+  const allOffers = {
     category,
     current: offersByCategory
   };
@@ -59,7 +59,7 @@ offersRouter.get(`/category/:categoryId`, async (req, res) => {
     fullView: true,
     categories,
     count,
-    offers,
+    allOffers,
     page,
     totalPages,
     user
@@ -102,7 +102,21 @@ offersRouter.get(`/:id`, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
   const oneOffer = await getViewOfferData({id});
-  res.render(`offers/ticket`, {oneOffer, id, user, csrfToken: req.csrfToken()});
+
+  oneOffer.createdAt = formatDate(oneOffer.createdAt, TypeFormatDate.OFFER);
+
+  if (oneOffer.comments.length) {
+    oneOffer.comments.forEach((comment) => {
+      comment.createdAt = formatDate(comment.createdAt, TypeFormatDate.COMMENT);
+    });
+  }
+
+  res.render(`offers/ticket`, {
+    oneOffer,
+    id,
+    user,
+    csrfToken: req.csrfToken()
+  });
 });
 
 

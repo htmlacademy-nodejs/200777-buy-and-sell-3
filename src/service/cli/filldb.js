@@ -126,7 +126,6 @@ module.exports = {
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
 
     const offers = generateOffers(countOffer, sentences, titles, categories, comments, users);
-
     return initDatabase(sequelize, {categories, offers, users});
   }
 };

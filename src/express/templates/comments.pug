@@ -1,13 +1,6 @@
 extends layout.pug
 
 block content
-
-  -
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return date.toLocaleString('ru-RU', {day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'});
-    }
-
   main.page-content
     section.comments
       .comments__wrapper
@@ -31,7 +24,7 @@ block content
                         a.comment-card__avatar.avatar(href='/my/comments')
                           img(src=`/img/${comment.users.avatar}` alt="Аватар пользователя")
                         p.comment-card__author #{comment.users.name}
-                        p.comment-card__date #{formatDate(comment.createdAt)}
+                        p.comment-card__date #{comment.createdAt}
                       .comment-card__content
                         p
                           | #{comment.text}

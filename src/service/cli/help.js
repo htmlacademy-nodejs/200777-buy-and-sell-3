@@ -10,7 +10,7 @@ module.exports = {
 
     Гайд:
       server <command>
-      
+
       Команды:
 
       --version:            выводит номер версии

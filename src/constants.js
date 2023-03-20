@@ -28,3 +28,7 @@ module.exports.HttpMethod = {
   DELETE: `DELETE`
 };
 module.exports.OFFERS_PER_PAGE = 8;
+module.exports.TypeFormatDate = {
+  OFFER: `D MMMM YYYY`,
+  COMMENT: `h:mm D MMMM YYYY`
+};

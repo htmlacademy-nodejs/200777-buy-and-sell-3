@@ -4,6 +4,6 @@ section.tickets-list.ticket-list__discussed
     .tickets-list__header
       p.tickets-list__title Самые обсуждаемые
     ul
-      each offer of offers.commented
+      each itemOffer of allOffers.commented
         li.tickets-list__item
           include offer-card.pug

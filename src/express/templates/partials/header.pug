@@ -1,5 +1,5 @@
 -
-  const queryString = (query) ? query : ''
+  const queryString = (query) ? query : '';
 
 header(class={header: true, 'header--logged': user})
   .header__wrapper
@@ -8,7 +8,7 @@ header(class={header: true, 'header--logged': user})
     nav.header__user-menu
       ul.header__list
         li.header__item
-          a(href='/') Публикации
+          a(href='/my') Публикации
         li.header__item
           a(href='/my/comments') Комментарии
         li.header__item
@@ -19,6 +19,6 @@ header(class={header: true, 'header--logged': user})
       .search__close-btn
     if user
       a.header__avatar.avatar(href='#')
-        img(src='/img/avatar.jpg' srcset='/img/avatar@2x.jpg 2x' alt='Аватар пользователя')
+        img(src=`/img/${user.avatar}` alt='Аватар пользователя')
     else
       a.header__input(href='/register') Вход и регистрация

@@ -3,7 +3,6 @@
 const sequelize = require(`../lib/sequelize`);
 const express = require(`express`);
 const http = require(`http`);
-
 const {HttpCode, API_PREFIX, ExitCode} = require(`../../constants`);
 const routes = require(`../api`);
 const {getLogger} = require(`../lib/logger`);
@@ -37,7 +36,6 @@ app.use((req, res) => {
   res
     .status(HttpCode.NOT_FOUND)
     .send(`Not found`);
-
   logger.error(`Route is not found: ${req.url}`);
 });
 

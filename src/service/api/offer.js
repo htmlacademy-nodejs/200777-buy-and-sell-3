@@ -8,7 +8,6 @@ const routeParamsValidator = require(`../middlewares/route-params-validator`);
 const offerExists = require(`../middlewares/offer-exists`);
 const {adaptToClient} = require(`../lib/adapt-to-client`);
 
-
 module.exports = (app, offerService, commentService) => {
   const route = new Router();
   app.use(`/offers`, route);
@@ -57,7 +56,6 @@ module.exports = (app, offerService, commentService) => {
   });
 
 
-  // Get offer's comments
   route.get(`/:offerId/comments`, [routeParamsValidator, offerExists(offerService)], async (req, res) => {
     const {offerId} = req.params;
 
@@ -83,7 +81,6 @@ module.exports = (app, offerService, commentService) => {
   });
 
 
-  // Create comment
   route.post(`/:offerId/comments`, [routeParamsValidator, offerExists(offerService), commentValidator], async (req, res) => {
     const {offerId} = req.params;
     const comment = await commentService.create(offerId, req.body);
@@ -111,7 +108,6 @@ module.exports = (app, offerService, commentService) => {
   });
 
 
-  // Delete offer
   route.delete(`/:offerId`, routeParamsValidator, async (req, res) => {
     const {offerId} = req.params;
     const {userId} = req.body;
@@ -138,7 +134,6 @@ module.exports = (app, offerService, commentService) => {
   });
 
 
-  // Delete comment
   route.delete(`/:offerId/comments/:commentId`, [routeParamsValidator, offerExists(offerService)], async (req, res) => {
     const {offerId, commentId} = req.params;
     const {userId} = req.body;

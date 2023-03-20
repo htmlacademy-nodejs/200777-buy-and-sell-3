@@ -1,27 +1,6 @@
 extends ../layout.pug
 
 block content
-  -
-    const TypeFormateDate = {
-      OFFER: 'offer',
-      COMMENT: 'comment'
-    };
-
-    const formatDate = (type, dateString) => {
-      const date = new Date(dateString);
-      let options;
-
-      switch (type) {
-        case TypeFormateDate.OFFER:
-          options = {day: '2-digit', month: 'long', year: 'numeric'};
-          break;
-        case TypeFormateDate.COMMENT:
-          options = {day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'};
-          break;
-      }
-      return date.toLocaleString('ru-RU', options);
-    }
-
   main.page-content
     section.ticket
       .ticket__wrapper
@@ -41,7 +20,7 @@ block content
             .ticket__data
               p
                 b Дата добавления:
-                span #{formatDate(TypeFormateDate.OFFER, oneOffer.createdAt)}
+                span #{oneOffer.createdAt}
               p
                 b Автор:
                 a(href='/my') #{oneOffer.users.name}
@@ -88,6 +67,6 @@ block content
                         a.comment-card__avatar.avatar(href='#')
                           img(src=`/img/${comment.users.avatar}` alt='Аватар пользователя')
                         p.comment-card__author #{comment.users.name}
-                        p.comment-card__date #{formatDate(TypeFormateDate.COMMENT, comment.createdAt)}
+                        p.comment-card__date #{comment.createdAt}
                       .comment-card__content
                         p #{comment.text}
